@@ -1,10 +1,11 @@
 import type { Route } from "./+types/login";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { apiClient } from "../../api/apiClient";
 import { useState } from "react";
 import axios from "axios";
+import { initializeSessionFromToken } from "../../stores/auth";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -19,6 +20,8 @@ type LoginFormValues = {
 };
 
 export default function Login() {
+    const navigate = useNavigate();
+    const location = useLocation();
     const unauthorized = useState(false);
     const {
         register,
@@ -41,8 +44,17 @@ export default function Login() {
         try {
             const response = await apiClient.post("/auth/token", params, {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                skipAuth: true,
+                skipAuthRefresh: true,
             });
             console.log("Login Response:", response.data);
+            const accessToken: string = response.data.access_token;
+
+            await initializeSessionFromToken(accessToken);
+
+            const from = (location.state as { from?: string } | null)?.from;
+            navigate(from || "/", { replace: true });
+
             unauthorized[1](false);
         } catch (error) {
             console.error("Login Error:", error);
