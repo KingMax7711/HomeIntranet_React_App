@@ -6,6 +6,7 @@ import { apiClient } from "../../api/apiClient";
 import { useState } from "react";
 import axios from "axios";
 import { initializeSessionFromToken } from "../../stores/auth";
+import { Eye, EyeOff } from "lucide-react";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -23,6 +24,7 @@ export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const unauthorized = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const {
         register,
         handleSubmit,
@@ -36,7 +38,6 @@ export default function Login() {
     });
 
     const onSubmit = async (data: LoginFormValues) => {
-        console.log(data);
         const params = new URLSearchParams();
         // FastAPI OAuth2PasswordRequestForm attend le champ "username" (même si c'est un email)
         params.append("username", data.email);
@@ -47,7 +48,6 @@ export default function Login() {
                 skipAuth: true,
                 skipAuthRefresh: true,
             });
-            console.log("Login Response:", response.data);
             const accessToken: string = response.data.access_token;
 
             await initializeSessionFromToken(accessToken);
@@ -112,25 +112,44 @@ export default function Login() {
                     <label className="label" htmlFor="password">
                         <span className="label-text">Mot de passe</span>
                     </label>
-                    <input
-                        id="password"
-                        type="password"
-                        autoComplete="current-password"
-                        className={clsx(
-                            "input input-bordered w-full",
-                            errors.password && "input-error",
-                        )}
-                        aria-invalid={errors.password ? "true" : "false"}
-                        aria-describedby="password-error"
-                        {...register("password", {
-                            required: "Le mot de passe est requis.",
-                            minLength: {
-                                value: 6,
-                                message:
-                                    "Le mot de passe doit contenir au moins 6 caractères.",
-                            },
-                        })}
-                    />
+                    <div className="relative">
+                        <input
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            autoComplete="current-password"
+                            className={clsx(
+                                "input input-bordered w-full pr-12",
+                                errors.password && "input-error",
+                            )}
+                            aria-invalid={errors.password ? "true" : "false"}
+                            aria-describedby="password-error"
+                            {...register("password", {
+                                required: "Le mot de passe est requis.",
+                                minLength: {
+                                    value: 6,
+                                    message:
+                                        "Le mot de passe doit contenir au moins 6 caractères.",
+                                },
+                            })}
+                        />
+
+                        <button
+                            type="button"
+                            className="btn btn-ghost btn-square btn-sm absolute right-2 top-1/2 -translate-y-1/2"
+                            onClick={() => setShowPassword((v) => !v)}
+                            aria-label={
+                                showPassword
+                                    ? "Masquer le mot de passe"
+                                    : "Afficher le mot de passe"
+                            }
+                        >
+                            {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                            ) : (
+                                <Eye className="h-5 w-5" />
+                            )}
+                        </button>
+                    </div>
                     <label className="label">
                         <span id="password-error" className="label-text-alt text-error">
                             {errors.password?.message ?? "\u00A0"}

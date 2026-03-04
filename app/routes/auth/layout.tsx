@@ -1,6 +1,4 @@
 import { Outlet } from "react-router";
-import type { Route } from "./+types/layout";
-import clsx from "clsx";
 
 export default function Layout() {
     return (

@@ -12,9 +12,6 @@ export default function Home() {
     return (
         <div>
             <h1>Welcome to the Home Page {user?.last_name}</h1>
-            <button className="btn btn-error" onClick={() => endSession("LOGOUT")}>
-                Logout
-            </button>
         </div>
     );
 }
