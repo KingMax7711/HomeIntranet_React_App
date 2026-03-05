@@ -1,11 +1,15 @@
 import { apiClient } from "~/api/apiClient";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export default function ProductRedirectCard() {
     const [totalProducts, setTotalProducts] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
     const [refreshIndex, setRefreshIndex] = useState(0);
+
+    const [totalMalls, setTotalMalls] = useState<number | null>(null);
+    const [loadingMalls, setLoadingMalls] = useState(false);
+    const [refreshMallsIndex, setRefreshMallsIndex] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,20 +32,44 @@ export default function ProductRedirectCard() {
         return () => controller.abort();
     }, [refreshIndex]);
 
+    useEffect(() => {
+        const controller = new AbortController();
+        setLoadingMalls(true);
+
+        (async () => {
+            try {
+                const r = await apiClient.get("/malls/all", {
+                    signal: controller.signal,
+                });
+                setTotalMalls(Array.isArray(r.data) ? r.data.length : null);
+            } catch (e) {
+                setTotalMalls(null);
+            } finally {
+                setLoadingMalls(false);
+            }
+        })();
+
+        return () => controller.abort();
+    }, [refreshMallsIndex]);
+
     return (
-        <div className="card bg-base-300 shadow-xl">
-            <div className="card-body">
-                <h2 className="card-title">Catalogue de produits</h2>
-                <p>
+        <div className="collapse collapse-arrow bg-base-300 shadow-xl rounded-box p-3">
+            <input type="checkbox" />
+            <div className="collapse-title text-lg font-semibold">
+                Catalogue (produits & magasins)
+            </div>
+            <div className="collapse-content">
+                <h3 className="font-semibold">Produits</h3>
+                <p className="text-sm opacity-80 mt-1">
                     {loading ? (
                         <span className="loading loading-spinner loading-xs" />
                     ) : totalProducts !== null ? (
-                        `Le catalogue de produits contient actuellement ${totalProducts} produit${totalProducts > 1 ? "s" : ""}.`
+                        `Le catalogue contient ${totalProducts} produit${totalProducts > 1 ? "s" : ""}.`
                     ) : (
                         <span className="text-error">Indisponible</span>
                     )}
                 </p>
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 mt-3">
                     <button
                         type="button"
                         className="btn btn-secondary w-1/2"
@@ -50,10 +78,40 @@ export default function ProductRedirectCard() {
                         Actualiser
                     </button>
                     <button
+                        type="button"
                         onClick={() => navigate("/shopping_products")}
                         className="btn btn-primary w-1/2"
                     >
                         Voir le catalogue
+                    </button>
+                </div>
+
+                <div className="divider my-4" />
+
+                <h3 className="font-semibold">Magasins</h3>
+                <p className="text-sm opacity-80 mt-1">
+                    {loadingMalls ? (
+                        <span className="loading loading-spinner loading-xs" />
+                    ) : totalMalls !== null ? (
+                        `La liste contient ${totalMalls} magasin${totalMalls > 1 ? "s" : ""}.`
+                    ) : (
+                        <span className="text-error">Indisponible</span>
+                    )}
+                </p>
+                <div className="flex gap-2 mt-3">
+                    <button
+                        type="button"
+                        className="btn btn-secondary w-1/2"
+                        onClick={() => setRefreshMallsIndex((i) => i + 1)}
+                    >
+                        Actualiser
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => navigate("/shopping_malls")}
+                        className="btn btn-primary w-1/2"
+                    >
+                        Voir la liste
                     </button>
                 </div>
             </div>

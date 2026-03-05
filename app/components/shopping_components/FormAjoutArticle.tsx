@@ -96,6 +96,7 @@ export default function FormAjoutArticle() {
         reset,
         resetField,
         setValue,
+        getValues,
         watch,
         formState: { errors, isSubmitting },
     } = useForm<FormValues>({
@@ -125,6 +126,39 @@ export default function FormAjoutArticle() {
     const productQuery = watch("productQuery");
     const categoryName = watch("categoryName");
     const defaultPrice = watch("defaultPrice");
+
+    const bumpQuantity = (delta: number) => {
+        const current = getValues("quantity");
+        const safeCurrent =
+            typeof current === "number" && !Number.isNaN(current) ? current : 1;
+        const next = Math.max(1, Math.trunc(safeCurrent + delta));
+        setValue("quantity", next, { shouldDirty: true, shouldValidate: true });
+    };
+
+    const bumpDefaultPrice = (delta: number) => {
+        const current = getValues("defaultPrice");
+        const safeCurrent =
+            typeof current === "number" && !Number.isNaN(current) ? current : 0;
+        const nextRaw = safeCurrent + delta;
+        const nextRounded = Math.round(nextRaw * 10) / 10;
+        const next = Math.max(0, nextRounded);
+        setValue("defaultPrice", next, { shouldDirty: true, shouldValidate: true });
+    };
+
+    const bumpPrice = (delta: number) => {
+        const current = getValues("price");
+        const safeCurrent =
+            typeof current === "number" && !Number.isNaN(current)
+                ? current
+                : typeof productDefaultPrice === "number" &&
+                    !Number.isNaN(productDefaultPrice)
+                  ? productDefaultPrice
+                  : 0;
+        const nextRaw = safeCurrent + delta;
+        const nextRounded = Math.round(nextRaw * 10) / 10;
+        const next = Math.max(0, nextRounded);
+        setValue("price", next, { shouldDirty: true, shouldValidate: true });
+    };
 
     const filteredProducts = useMemo(() => {
         const q = normalize(productQuery ?? "");
@@ -500,20 +534,23 @@ export default function FormAjoutArticle() {
                                     <label className="label">
                                         <span className="label-text">Prix</span>
                                     </label>
-                                    <input
-                                        type="number"
-                                        className="input input-bordered"
-                                        min={0}
-                                        step="0.01"
-                                        placeholder=""
-                                        {...register("defaultPrice", {
-                                            valueAsNumber: true,
-                                            min: {
-                                                value: 0,
-                                                message: "Doit être ≥ 0",
-                                            },
-                                        })}
-                                    />
+                                    <div className="flex items-stretch gap-2">
+                                        <input
+                                            type="number"
+                                            inputMode="decimal"
+                                            className={`input input-bordered flex-1 ${errors.defaultPrice ? "input-error" : ""}`}
+                                            min={0}
+                                            step={0.1}
+                                            placeholder=""
+                                            {...register("defaultPrice", {
+                                                valueAsNumber: true,
+                                                min: {
+                                                    value: 0,
+                                                    message: "Doit être ≥ 0",
+                                                },
+                                            })}
+                                        />
+                                    </div>
                                     {errors.defaultPrice ? (
                                         <p className="text-sm text-error mt-1">
                                             {String(errors.defaultPrice.message)}
@@ -544,20 +581,41 @@ export default function FormAjoutArticle() {
                             <label className="label">
                                 <span className="label-text">Quantité</span>
                             </label>
-                            <input
-                                type="number"
-                                className={`input input-bordered ${errors.quantity ? "input-error" : ""}`}
-                                min={1}
-                                step={1}
-                                {...register("quantity", {
-                                    valueAsNumber: true,
-                                    required: "La quantité est requise",
-                                    min: {
-                                        value: 1,
-                                        message: "La quantité doit être > 0",
-                                    },
-                                })}
-                            />
+                            <div className="flex items-stretch gap-2">
+                                <input
+                                    type="number"
+                                    inputMode="numeric"
+                                    className={`input input-bordered flex-1 ${errors.quantity ? "input-error" : ""}`}
+                                    min={1}
+                                    step={1}
+                                    {...register("quantity", {
+                                        valueAsNumber: true,
+                                        required: "La quantité est requise",
+                                        min: {
+                                            value: 1,
+                                            message: "La quantité doit être > 0",
+                                        },
+                                    })}
+                                />
+                                <div className="join md:hidden">
+                                    <button
+                                        type="button"
+                                        className="btn join-item"
+                                        onClick={() => bumpQuantity(-1)}
+                                        aria-label="Diminuer la quantité"
+                                    >
+                                        -
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn join-item"
+                                        onClick={() => bumpQuantity(1)}
+                                        aria-label="Augmenter la quantité"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
                             {errors.quantity ? (
                                 <p className="text-sm text-error mt-1">
                                     {String(errors.quantity.message)}
@@ -569,24 +627,45 @@ export default function FormAjoutArticle() {
                             <label className="label">
                                 <span className="label-text">Prix</span>
                             </label>
-                            <input
-                                type="number"
-                                className={`input input-bordered ${errors.price ? "input-error" : ""}`}
-                                min={0}
-                                step="0.01"
-                                placeholder={
-                                    typeof productDefaultPrice === "number"
-                                        ? String(productDefaultPrice)
-                                        : ""
-                                }
-                                {...register("price", {
-                                    valueAsNumber: true,
-                                    min: {
-                                        value: 0,
-                                        message: "Le prix doit être ≥ 0",
-                                    },
-                                })}
-                            />
+                            <div className="flex items-stretch gap-2">
+                                <input
+                                    type="number"
+                                    inputMode="decimal"
+                                    className={`input input-bordered flex-1 ${errors.price ? "input-error" : ""}`}
+                                    min={0}
+                                    step={0.1}
+                                    placeholder={
+                                        typeof productDefaultPrice === "number"
+                                            ? String(productDefaultPrice)
+                                            : ""
+                                    }
+                                    {...register("price", {
+                                        valueAsNumber: true,
+                                        min: {
+                                            value: 0,
+                                            message: "Le prix doit être ≥ 0",
+                                        },
+                                    })}
+                                />
+                                <div className="join md:hidden">
+                                    <button
+                                        type="button"
+                                        className="btn join-item"
+                                        onClick={() => bumpPrice(-0.1)}
+                                        aria-label="Diminuer le prix"
+                                    >
+                                        -
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn join-item"
+                                        onClick={() => bumpPrice(0.1)}
+                                        aria-label="Augmenter le prix"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
                             {errors.price ? (
                                 <p className="text-sm text-error mt-1">
                                     {String(errors.price.message)}

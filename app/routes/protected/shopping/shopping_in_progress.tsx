@@ -220,7 +220,15 @@ export default function ShoppingInProgress() {
 
     const handleEndShopping = () => {
         if (!shoppingList) return;
-        console.log("Fin du shopping");
+        (async () => {
+            try {
+                await apiClient.post(`/shopping_lists/close/${shoppingList.id}`);
+                shoppingListRefresh();
+            } catch (e) {
+                console.error("Failed to complete shopping list", e);
+                alert("Une erreur est survenue lors de la finalisation des courses.");
+            }
+        })();
     };
 
     useEffect(() => {

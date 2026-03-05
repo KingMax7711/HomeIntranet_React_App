@@ -62,11 +62,17 @@ export default function ShoppingListInfo({
     onStartShopping,
     onCreateFreshList,
     onCreateFromLast,
+    selectedMallId,
+    mallsList,
+    onMallChange,
 }: {
     view: ShoppingListView | null;
     onStartShopping: () => void;
     onCreateFreshList: () => void;
     onCreateFromLast: () => void;
+    selectedMallId: number | null;
+    mallsList: { id: number; name: string; location?: string | null }[];
+    onMallChange: (mallId: number | null) => void;
 }) {
     const computedTotal = useMemo(() => {
         if (!view) return 0;
@@ -89,10 +95,41 @@ export default function ShoppingListInfo({
                         </span>
                     </p>
                     <div className="divider my-0" />
+                    {/* sélection du magasin pour la nouvelle liste */}
+                    <div className="flex flex-col gap-3">
+                        <select
+                            className="select select-bordered w-full md:w-4/5 self-center"
+                            value={selectedMallId ?? ""}
+                            onChange={(e) => {
+                                const v = e.target.value;
+                                if (!v) {
+                                    onMallChange(null);
+                                    return;
+                                }
+                                const n = Number(v);
+                                if (!Number.isFinite(n)) return;
+                                onMallChange(n);
+                            }}
+                        >
+                            <option value="">Sélectionner un magasin</option>
+                            {mallsList.map((mall) => (
+                                <option key={mall.id} value={mall.id}>
+                                    {capitalizeFirstLetter(
+                                        mall.name?.trim() || "Magasin",
+                                    )}
+                                    {" - "}
+                                    {capitalizeFirstLetter(
+                                        mall.location?.trim() || "Localisation",
+                                    )}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <div className="flex flex-col md:flex-row gap-3">
                         <button
                             type="button"
                             className="btn btn-secondary w-full md:w-1/2"
+                            disabled={!selectedMallId}
                             onClick={() => {
                                 onCreateFreshList();
                             }}
@@ -103,11 +140,12 @@ export default function ShoppingListInfo({
                         <button
                             type="button"
                             className="btn btn-primary w-full md:w-1/2"
+                            disabled={!selectedMallId}
                             onClick={() => {
                                 onCreateFromLast();
                             }}
                         >
-                            Créer à partir de la dernière liste
+                            Importer la dernière liste
                         </button>
                     </div>
                 </div>

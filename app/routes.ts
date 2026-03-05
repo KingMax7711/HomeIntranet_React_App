@@ -10,6 +10,7 @@ export default [
                 "routes/protected/shopping/shopping_in_progress.tsx",
             ),
             route("shopping_products", "routes/protected/shopping/shopping_products.tsx"),
+            route("shopping_malls", "routes/protected/shopping/shopping_malls.tsx"),
         ]),
     ]),
     layout("routes/auth/layout.tsx", [

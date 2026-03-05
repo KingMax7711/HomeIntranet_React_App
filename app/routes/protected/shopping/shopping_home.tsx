@@ -12,6 +12,7 @@ import FormAjoutArticle from "~/components/shopping_components/FormAjoutArticle"
 import FormEditArticle from "~/components/shopping_components/FormEditArticle";
 import ProductRedirectCard from "~/components/shopping_components/ProductRedirectCard";
 import { useNavigate } from "react-router";
+import type { MallBase } from "~/types/mall";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -30,6 +31,13 @@ export default function ShoppingHome() {
         "idle" | "loading" | "loaded" | "none" | "error"
     >("idle");
 
+    const [malls, setMalls] = useState<MallBase[]>([]);
+    const [mallsStatus, setMallsStatus] = useState<
+        "idle" | "loading" | "loaded" | "error"
+    >("idle");
+
+    const [selectedMallId, setSelectedMallId] = useState<number | null>(null);
+
     const addDialogRef = useRef<HTMLDialogElement | null>(null);
     const editDialogRef = useRef<HTMLDialogElement | null>(null);
     const [selectedItem, setSelectedItem] = useState<ShoppingListItemDetailed | null>(
@@ -46,6 +54,10 @@ export default function ShoppingHome() {
             navigate("/shopping_in_progress");
         }
     }, [shoppingList, navigate]);
+
+    const oldListid = useMemo(() => {
+        return lastList?.id;
+    }, [lastList]);
 
     const openDialogAtTop = (
         dlg: HTMLDialogElement | null,
@@ -123,11 +135,55 @@ export default function ShoppingHome() {
     };
 
     const handleCreateFreshList = () => {
-        console.log("Create fresh list");
+        if (!selectedMallId) {
+            window.alert("Veuillez sélectionner un magasin avant de créer une liste.");
+            return;
+        }
+        (async () => {
+            try {
+                const r = await apiClient.post<ShoppingListView>(
+                    "/shopping_lists/create_fresh",
+                    {
+                        mall_id: selectedMallId,
+                    },
+                );
+                const newList = r.data;
+                setSelectedMallId(null);
+                shoppingListRefresh();
+            } catch (e) {
+                console.error("Failed to create shopping list", e);
+                alert(
+                    "Une erreur est survenue lors de la création de la liste de courses.",
+                );
+            }
+        })();
     };
 
     const handleCreateFromLast = () => {
-        console.log("Create from last");
+        if (!selectedMallId) {
+            window.alert(
+                "Veuillez sélectionner un magasin avant de créer une liste à partir de la dernière.",
+            );
+            return;
+        }
+        (async () => {
+            try {
+                const r = await apiClient.post<ShoppingListView>(
+                    `/shopping_lists/create_from_old/${oldListid}`,
+                    {
+                        mall_id: selectedMallId,
+                    },
+                );
+                const newList = r.data;
+                setSelectedMallId(null);
+                shoppingListRefresh();
+            } catch (e) {
+                console.error("Failed to create shopping list from old", e);
+                alert(
+                    "Une erreur est survenue lors de la création de la liste de courses à partir de la dernière.",
+                );
+            }
+        })();
     };
 
     useEffect(() => {
@@ -154,6 +210,27 @@ export default function ShoppingHome() {
 
                 setLastList(null);
                 setLastListStatus("error");
+            }
+        })();
+
+        return () => controller.abort();
+    }, []);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        setMallsStatus("loading");
+
+        (async () => {
+            try {
+                const r = await apiClient.get<MallBase[]>("/malls/all", {
+                    signal: controller.signal,
+                });
+                setMalls(Array.isArray(r.data) ? r.data : []);
+                setMallsStatus("loaded");
+            } catch (e) {
+                if (axios.isAxiosError(e) && e.code === "ERR_CANCELED") return;
+                setMalls([]);
+                setMallsStatus("error");
             }
         })();
 
@@ -193,6 +270,9 @@ export default function ShoppingHome() {
                         onStartShopping={handleStartShopping}
                         onCreateFreshList={handleCreateFreshList}
                         onCreateFromLast={handleCreateFromLast}
+                        selectedMallId={selectedMallId}
+                        mallsList={malls}
+                        onMallChange={setSelectedMallId}
                     />
                     <ProductRedirectCard />
                     <div className="hidden md:block">{lastListCard}</div>
