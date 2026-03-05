@@ -1,6 +1,2 @@
-Gestion UX : 
-- Formulaire d'ajout d'un article
--- Auto-completer au maximum à l'aide des DB (products et category)
--- Gérer le cas ou on créer un article en même temps
-- Edition d'article
-- Suppression d'article
+Adapter les items card pendant le mode course.
+Ajouter la logique de fin de course.

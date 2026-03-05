@@ -39,7 +39,7 @@ export default function FormEditArticle({ item }: Props) {
         register,
         handleSubmit,
         reset,
-        formState: { errors, isSubmitting },
+        formState: { errors, isSubmitting, isDirty },
     } = useForm<FormValues>({
         mode: "onBlur",
         defaultValues,
@@ -182,7 +182,7 @@ export default function FormEditArticle({ item }: Props) {
                 <button
                     type="submit"
                     className="btn btn-primary w-1/2"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !isDirty}
                 >
                     Enregistrer
                 </button>

@@ -27,7 +27,7 @@ export default function ShoppingListPreparationItemCard({
                                 {name}
                             </h3>
                             {in_promotion && (
-                                <span className="hidden md:inline-block badge badge-sm badge-success badge-outline">
+                                <span className="hidden md:inline-block badge badge-sm badge-success badge-outline ml-3">
                                     En promotion
                                 </span>
                             )}

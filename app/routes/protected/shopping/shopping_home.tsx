@@ -10,6 +10,8 @@ import { apiClient } from "~/api/apiClient";
 import type { ShoppingListView } from "~/stores/shopping_list";
 import FormAjoutArticle from "~/components/shopping_components/FormAjoutArticle";
 import FormEditArticle from "~/components/shopping_components/FormEditArticle";
+import ProductRedirectCard from "~/components/shopping_components/ProductRedirectCard";
+import { useNavigate } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -21,6 +23,7 @@ export function meta({}: Route.MetaArgs) {
 export default function ShoppingHome() {
     const shoppingList = useShoppingListStore((state) => state.view);
     const shoppingListRefresh = useShoppingListStore((state) => state.forceSync);
+    const navigate = useNavigate();
 
     const [lastList, setLastList] = useState<ShoppingListView | null>(null);
     const [lastListStatus, setLastListStatus] = useState<
@@ -37,6 +40,12 @@ export default function ShoppingHome() {
         const list = shoppingList?.items;
         return Array.isArray(list) ? list : [];
     }, [shoppingList]);
+
+    const checkShoppingListStatus = useEffect(() => {
+        if (shoppingList?.status === "in_progress") {
+            navigate("/shopping_in_progress");
+        }
+    }, [shoppingList, navigate]);
 
     const openDialogAtTop = (
         dlg: HTMLDialogElement | null,
@@ -97,6 +106,30 @@ export default function ShoppingHome() {
         })();
     };
 
+    const handleStartShopping = () => {
+        if (!shoppingList) return;
+        (async () => {
+            try {
+                await apiClient.post(
+                    `/shopping_lists/set_in_progress/${shoppingList.id}`,
+                );
+                shoppingListRefresh();
+                navigate("/shopping_in_progress");
+            } catch (e) {
+                console.error("Failed to start shopping", e);
+                alert("Une erreur est survenue lors du démarrage des courses.");
+            }
+        })();
+    };
+
+    const handleCreateFreshList = () => {
+        console.log("Create fresh list");
+    };
+
+    const handleCreateFromLast = () => {
+        console.log("Create from last");
+    };
+
     useEffect(() => {
         const controller = new AbortController();
         setLastListStatus("loading");
@@ -155,7 +188,13 @@ export default function ShoppingHome() {
         <div className="p-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-6 md:col-span-1">
-                    <ShoppingListInfo view={shoppingList} />
+                    <ShoppingListInfo
+                        view={shoppingList}
+                        onStartShopping={handleStartShopping}
+                        onCreateFreshList={handleCreateFreshList}
+                        onCreateFromLast={handleCreateFromLast}
+                    />
+                    <ProductRedirectCard />
                     <div className="hidden md:block">{lastListCard}</div>
                 </div>
 
@@ -166,6 +205,7 @@ export default function ShoppingHome() {
                             <button
                                 type="button"
                                 className="btn btn-primary btn-sm"
+                                disabled={!shoppingList}
                                 onClick={handleOpenAdd}
                             >
                                 Ajouter un article
@@ -175,7 +215,7 @@ export default function ShoppingHome() {
                         <div className="divider my-0" />
 
                         {items.length === 0 ? (
-                            <p className="text-sm opacity-70">
+                            <p className="text-sm opacity-70 text-center">
                                 Aucun article pour le moment.
                             </p>
                         ) : (

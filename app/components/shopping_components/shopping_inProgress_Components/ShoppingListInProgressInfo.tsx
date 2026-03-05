@@ -57,16 +57,12 @@ const formatCurrencyEUR = (value: number) => {
     }).format(safe);
 };
 
-export default function ShoppingListInfo({
+export default function ShoppingListInProgressInfo({
     view,
-    onStartShopping,
-    onCreateFreshList,
-    onCreateFromLast,
+    onEndShopping,
 }: {
     view: ShoppingListView | null;
-    onStartShopping: () => void;
-    onCreateFreshList: () => void;
-    onCreateFromLast: () => void;
+    onEndShopping: () => void;
 }) {
     const computedTotal = useMemo(() => {
         if (!view) return 0;
@@ -77,40 +73,11 @@ export default function ShoppingListInfo({
 
     if (!view)
         return (
-            <div className="card w-full h-fit bg-base-300 shadow-xl">
-                <div className="card-body gap-5">
-                    <h2 className="card-title">Aucune liste de courses</h2>
-                    <p className="text-sm opacity-70">
-                        Aucune liste de courses n'est actuellement active. <br />
-                        {"\n"}
-                        <span className="italic">
-                            Vous pouvez en créer une nouvelle ou importer les articles non
-                            trouvés de la dernière liste.{" "}
-                        </span>
-                    </p>
-                    <div className="divider my-0" />
-                    <div className="flex flex-col md:flex-row gap-3">
-                        <button
-                            type="button"
-                            className="btn btn-secondary w-full md:w-1/2"
-                            onClick={() => {
-                                onCreateFreshList();
-                            }}
-                        >
-                            {" "}
-                            Créer une nouvelle liste
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-primary w-full md:w-1/2"
-                            onClick={() => {
-                                onCreateFromLast();
-                            }}
-                        >
-                            Créer à partir de la dernière liste
-                        </button>
-                    </div>
-                </div>
+            <div className="card w-full h-full bg-base-300 shadow-xl">
+                <h2 className="card-title">Aucune liste de courses</h2>
+                <p className="text-sm opacity-70">
+                    Créez votre première liste pour commencer à ajouter des articles.
+                </p>
             </div>
         );
 
@@ -169,12 +136,12 @@ export default function ShoppingListInfo({
                 <div className="flex">
                     <button
                         type="button"
-                        className="btn btn-primary w-full"
+                        className="btn btn-error btn-outline w-full"
                         onClick={() => {
-                            onStartShopping();
+                            onEndShopping();
                         }}
                     >
-                        Démarrer les courses
+                        Terminer les courses
                     </button>
                 </div>
             </div>

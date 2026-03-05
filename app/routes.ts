@@ -5,6 +5,11 @@ export default [
         index("routes/protected/home.tsx"),
         layout("routes/protected/shopping/layout.tsx", [
             route("shopping_home", "routes/protected/shopping/shopping_home.tsx"),
+            route(
+                "shopping_in_progress",
+                "routes/protected/shopping/shopping_in_progress.tsx",
+            ),
+            route("shopping_products", "routes/protected/shopping/shopping_products.tsx"),
         ]),
     ]),
     layout("routes/auth/layout.tsx", [
