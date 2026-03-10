@@ -16,7 +16,7 @@ const endpointRegisterArticle = "/shopping_list_globals/register_article";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "HomeFlow - Produits" },
+        { title: "NestBoard - Produits" },
         { name: "description", content: "Page de produits" },
     ];
 }

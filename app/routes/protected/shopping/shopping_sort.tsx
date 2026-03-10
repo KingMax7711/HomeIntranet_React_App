@@ -30,7 +30,7 @@ import { apiClient } from "~/api/apiClient";
 
 export function meta() {
     return [
-        { title: "HomeFlow - Trier la liste" },
+        { title: "NestBoard - Trier la liste" },
         { name: "description", content: "Tri de la liste de courses" },
     ];
 }
