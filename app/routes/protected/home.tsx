@@ -88,7 +88,7 @@ export default function Home() {
         setIsHouseActionLoading(true);
 
         try {
-            const r = await apiClient.post(`/houses/create/`, {
+            const r = await apiClient.post(`/houses/create`, {
                 name: newHouseName,
             });
             console.log("Create house response:", r.data);
