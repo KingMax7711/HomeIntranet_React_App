@@ -16,7 +16,7 @@ import { sortByCustomSortIndex } from "~/tools/formater";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "HomeFlow - Courses en cours" },
+        { title: "NestBoard - Courses en cours" },
         { name: "description", content: "Page des courses en cours" },
     ];
 }

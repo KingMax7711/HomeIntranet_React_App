@@ -17,7 +17,7 @@ import { sortByCustomSortIndex } from "~/tools/formater";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "HomeFlow - Shopping" },
+        { title: "NestBoard - Shopping" },
         { name: "description", content: "Page de shopping" },
     ];
 }

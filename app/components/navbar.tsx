@@ -89,7 +89,7 @@ export default function Navbar() {
                         className="btn btn-ghost normal-case text-xl"
                         onClick={() => navigate("/")}
                     >
-                        HomeFlow
+                        NestBoard
                     </button>
                 </div>
             </div>

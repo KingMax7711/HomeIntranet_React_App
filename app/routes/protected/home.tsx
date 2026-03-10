@@ -11,7 +11,7 @@ import axios from "axios";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "HomeFlow - Page d'acceuil" },
+        { title: "NestBoard - Page d'acceuil" },
         { name: "description", content: "Page d'aceuil" },
     ];
 }
