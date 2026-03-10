@@ -8,7 +8,7 @@ import type { MallBase } from "~/types/mall";
 
 export function meta() {
     return [
-        { title: "HomeFlow - Magasins" },
+        { title: "NestBoard - Magasins" },
         { name: "description", content: "Gestion des magasins" },
     ];
 }
@@ -99,7 +99,7 @@ export default function ShoppingMalls() {
 
     const sortedMalls = useMemo(() => {
         const list = Array.isArray(malls) ? [...malls] : [];
-        list.sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
+        list.sort((a, b) => (a.location ?? "").localeCompare(b.location ?? ""));
         return list;
     }, [malls]);
 

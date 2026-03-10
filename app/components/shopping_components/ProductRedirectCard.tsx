@@ -10,6 +10,11 @@ export default function ProductRedirectCard() {
     const [totalMalls, setTotalMalls] = useState<number | null>(null);
     const [loadingMalls, setLoadingMalls] = useState(false);
     const [refreshMallsIndex, setRefreshMallsIndex] = useState(0);
+
+    const [totalRecurrences, setTotalRecurrences] = useState<number | null>(null);
+    const [loadingRecurrences, setLoadingRecurrences] = useState(false);
+    const [refreshRecurrencesIndex, setRefreshRecurrencesIndex] = useState(0);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,12 +57,30 @@ export default function ProductRedirectCard() {
         return () => controller.abort();
     }, [refreshMallsIndex]);
 
+    useEffect(() => {
+        const controller = new AbortController();
+        setLoadingRecurrences(true);
+
+        (async () => {
+            try {
+                const r = await apiClient.get("/product_recurrences/all", {
+                    signal: controller.signal,
+                });
+                setTotalRecurrences(Array.isArray(r.data) ? r.data.length : null);
+            } catch (e) {
+                setTotalRecurrences(null);
+            } finally {
+                setLoadingRecurrences(false);
+            }
+        })();
+
+        return () => controller.abort();
+    }, [refreshRecurrencesIndex]);
+
     return (
         <div className="collapse collapse-arrow bg-base-300 shadow-xl rounded-box p-3">
             <input type="checkbox" />
-            <div className="collapse-title text-lg font-semibold">
-                Catalogue (produits & magasins)
-            </div>
+            <div className="collapse-title text-lg font-semibold">Catalogues</div>
             <div className="collapse-content">
                 <h3 className="font-semibold">Produits</h3>
                 <p className="text-sm opacity-80 mt-1">
@@ -88,6 +111,35 @@ export default function ProductRedirectCard() {
 
                 <div className="divider my-4" />
 
+                <h3 className="font-semibold">Récurrences</h3>
+                <p className="text-sm opacity-80 mt-1">
+                    {loadingRecurrences ? (
+                        <span className="loading loading-spinner loading-xs" />
+                    ) : totalRecurrences !== null ? (
+                        `Il y a actuellement ${totalRecurrences} récurrence${totalRecurrences > 1 ? "s" : ""}.`
+                    ) : (
+                        <span className="text-error">Indisponible</span>
+                    )}
+                </p>
+                <div className="flex gap-2 mt-3">
+                    <button
+                        type="button"
+                        className="btn btn-secondary w-1/2"
+                        onClick={() => setRefreshRecurrencesIndex((i) => i + 1)}
+                    >
+                        Actualiser
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => navigate("/shopping_recurrences")}
+                        className="btn btn-primary w-1/2"
+                    >
+                        Voir les récurrences
+                    </button>
+                </div>
+
+                <div className="divider my-4" />
+
                 <h3 className="font-semibold">Magasins</h3>
                 <p className="text-sm opacity-80 mt-1">
                     {loadingMalls ? (
@@ -111,7 +163,7 @@ export default function ProductRedirectCard() {
                         onClick={() => navigate("/shopping_malls")}
                         className="btn btn-primary w-1/2"
                     >
-                        Voir la liste
+                        Voir les magasins
                     </button>
                 </div>
             </div>
