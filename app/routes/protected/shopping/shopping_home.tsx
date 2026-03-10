@@ -13,6 +13,7 @@ import FormEditArticle from "~/components/shopping_components/FormEditArticle";
 import ProductRedirectCard from "~/components/shopping_components/ProductRedirectCard";
 import { useNavigate } from "react-router";
 import type { MallBase } from "~/types/mall";
+import { sortByCustomSortIndex } from "~/tools/formater";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -48,6 +49,8 @@ export default function ShoppingHome() {
         const list = shoppingList?.items;
         return Array.isArray(list) ? list : [];
     }, [shoppingList]);
+
+    const sortedItems = useMemo(() => sortByCustomSortIndex(items), [items]);
 
     const checkShoppingListStatus = useEffect(() => {
         if (shoppingList?.status === "in_progress") {
@@ -294,13 +297,13 @@ export default function ShoppingHome() {
 
                         <div className="divider my-0" />
 
-                        {items.length === 0 ? (
+                        {sortedItems.length === 0 ? (
                             <p className="text-sm opacity-70 text-center">
                                 Aucun article pour le moment.
                             </p>
                         ) : (
-                            <div className="flex flex-col gap-3">
-                                {items.map((item) => (
+                            <div className="flex flex-col gap-3 h-full">
+                                {sortedItems.map((item) => (
                                     <ShoppingListPreparationItemCard
                                         key={item.id}
                                         item={item}
@@ -310,6 +313,19 @@ export default function ShoppingHome() {
                                 ))}
                             </div>
                         )}
+                        <div className="divider mt-4"></div>
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="btn btn-neutral btn-soft"
+                                disabled={items.length < 2}
+                                onClick={() => {
+                                    navigate("/shopping_sort");
+                                }}
+                            >
+                                Trier la liste
+                            </button>
+                        </div>
                     </div>
                 </div>
 

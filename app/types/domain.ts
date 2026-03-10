@@ -11,5 +11,6 @@ export type User = {
     email: string;
     inscription_date: ISODateString;
     privileges: "owner" | "user";
+    house_id: Id | null;
     [key: string]: unknown;
 };

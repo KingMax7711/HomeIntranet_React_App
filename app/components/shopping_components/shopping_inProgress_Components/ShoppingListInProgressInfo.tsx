@@ -60,9 +60,11 @@ const formatCurrencyEUR = (value: number) => {
 export default function ShoppingListInProgressInfo({
     view,
     onEndShopping,
+    isEndingShopping = false,
 }: {
     view: ShoppingListView | null;
     onEndShopping: () => void;
+    isEndingShopping?: boolean;
 }) {
     const computedTotal = useMemo(() => {
         if (!view) return 0;
@@ -137,11 +139,21 @@ export default function ShoppingListInProgressInfo({
                     <button
                         type="button"
                         className="btn btn-error btn-outline w-full"
+                        disabled={isEndingShopping}
+                        aria-busy={isEndingShopping}
                         onClick={() => {
                             onEndShopping();
                         }}
                     >
-                        Terminer les courses
+                        {isEndingShopping && (
+                            <span
+                                className="loading loading-spinner loading-sm"
+                                aria-hidden="true"
+                            />
+                        )}
+                        {isEndingShopping
+                            ? "Finalisation des courses..."
+                            : "Terminer les courses"}
                     </button>
                 </div>
             </div>

@@ -66,6 +66,7 @@ export default function ShoppingListInProgressItemCard({
     const price = item.price;
     const comment = item.product?.comment?.trim() || "";
     const in_promotion = item.in_promotion;
+    const need_coupons = item.need_coupons;
     const status = item.status ?? "pending";
     const affectedUserId = item.affected_user?.id;
     const meta = statusMeta(status);
@@ -84,11 +85,18 @@ export default function ShoppingListInProgressItemCard({
                     </div>
                     <div className="flex flex-col items-end gap-2 shrink-0">
                         <span className={meta.badgeClass}>{meta.badgeLabel}</span>
-                        {in_promotion && (
-                            <span className="badge badge-sm badge-success badge-outline opacity-90">
-                                En promotion
-                            </span>
-                        )}
+                        <div className="flex flex-col md:flex-row gap-2 md:items-center">
+                            {in_promotion && (
+                                <span className="badge badge-sm badge-success badge-outline opacity-90 self-end md:self-auto">
+                                    En promotion
+                                </span>
+                            )}
+                            {need_coupons && (
+                                <span className="badge badge-sm badge-warning badge-outline opacity-90 self-end md:self-auto">
+                                    Besoin de coupons
+                                </span>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

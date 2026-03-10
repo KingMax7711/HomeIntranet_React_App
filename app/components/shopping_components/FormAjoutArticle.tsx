@@ -30,6 +30,7 @@ type FormValues = {
     quantity: number;
     price?: number;
     inPromotion: boolean;
+    needCoupons: boolean;
 };
 
 const normalize = (s: string) => s.trim().toLowerCase();
@@ -61,6 +62,7 @@ export default function FormAjoutArticle() {
         quantity: 1,
         price: undefined,
         inPromotion: false,
+        needCoupons: false,
     };
 
     useEffect(() => {
@@ -140,7 +142,7 @@ export default function FormAjoutArticle() {
         const safeCurrent =
             typeof current === "number" && !Number.isNaN(current) ? current : 0;
         const nextRaw = safeCurrent + delta;
-        const nextRounded = Math.round(nextRaw * 10) / 10;
+        const nextRounded = Math.round(nextRaw * 100) / 100;
         const next = Math.max(0, nextRounded);
         setValue("defaultPrice", next, { shouldDirty: true, shouldValidate: true });
     };
@@ -155,7 +157,7 @@ export default function FormAjoutArticle() {
                   ? productDefaultPrice
                   : 0;
         const nextRaw = safeCurrent + delta;
-        const nextRounded = Math.round(nextRaw * 10) / 10;
+        const nextRounded = Math.round(nextRaw * 100) / 100;
         const next = Math.max(0, nextRounded);
         setValue("price", next, { shouldDirty: true, shouldValidate: true });
     };
@@ -237,6 +239,7 @@ export default function FormAjoutArticle() {
         const payload = {
             shopping_list: listId,
             in_promotion: !!values.inPromotion,
+            need_coupons: !!values.needCoupons, // !!! API currently expects "need_coupons" but we use "needCoupon" in the form for consistency
             price,
             quantity: values.quantity,
             product: productPayload,
@@ -540,7 +543,7 @@ export default function FormAjoutArticle() {
                                             inputMode="decimal"
                                             className={`input input-bordered flex-1 ${errors.defaultPrice ? "input-error" : ""}`}
                                             min={0}
-                                            step={0.1}
+                                            step={0.01}
                                             placeholder=""
                                             {...register("defaultPrice", {
                                                 valueAsNumber: true,
@@ -630,10 +633,9 @@ export default function FormAjoutArticle() {
                             <div className="flex items-stretch gap-2">
                                 <input
                                     type="number"
-                                    inputMode="decimal"
                                     className={`input input-bordered flex-1 ${errors.price ? "input-error" : ""}`}
                                     min={0}
-                                    step={0.1}
+                                    step={0.01}
                                     placeholder={
                                         typeof productDefaultPrice === "number"
                                             ? String(productDefaultPrice)
@@ -672,17 +674,28 @@ export default function FormAjoutArticle() {
                                 </p>
                             ) : null}
                         </div>
-                    </div>
-
-                    <div className="form-control mt-3">
-                        <label className="label cursor-pointer justify-start gap-3">
-                            <input
-                                type="checkbox"
-                                className="checkbox"
-                                {...register("inPromotion")}
-                            />
-                            <span className="label-text">Article en promotion ?</span>
-                        </label>
+                        <div className="form-control mt-3">
+                            <label className="label cursor-pointer justify-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    {...register("inPromotion")}
+                                />
+                                <span className="label-text">Article en promotion ?</span>
+                            </label>
+                        </div>
+                        <div className="form-control mt-3">
+                            <label className="label cursor-pointer justify-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    {...register("needCoupons")}
+                                />
+                                <span className="label-text">
+                                    Article nécessite un coupon ?
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </section>
 

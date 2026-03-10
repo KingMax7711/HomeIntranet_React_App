@@ -12,6 +12,7 @@ import FormEditArticle from "~/components/shopping_components/FormEditArticle";
 import { useNavigate } from "react-router";
 import type { User } from "~/types/domain";
 import { useAuthStore } from "~/stores/auth";
+import { sortByCustomSortIndex } from "~/tools/formater";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -38,6 +39,7 @@ export default function ShoppingInProgress() {
     >("idle");
 
     const [busyItemIds, setBusyItemIds] = useState<Record<number, boolean>>({});
+    const [isEndingShopping, setIsEndingShopping] = useState(false);
 
     const [lastList, setLastList] = useState<ShoppingListView | null>(null);
     const [lastListStatus, setLastListStatus] = useState<
@@ -78,10 +80,10 @@ export default function ShoppingInProgress() {
         );
 
         return {
-            assignedToMePending,
-            otherPending,
-            inCart,
-            notFoundOrGivenUp,
+            assignedToMePending: sortByCustomSortIndex(assignedToMePending),
+            otherPending: sortByCustomSortIndex(otherPending),
+            inCart: sortByCustomSortIndex(inCart),
+            notFoundOrGivenUp: sortByCustomSortIndex(notFoundOrGivenUp),
         };
     }, [items, userId]);
 
@@ -220,13 +222,17 @@ export default function ShoppingInProgress() {
 
     const handleEndShopping = () => {
         if (!shoppingList) return;
+        if (isEndingShopping) return;
         (async () => {
+            setIsEndingShopping(true);
             try {
                 await apiClient.post(`/shopping_lists/close/${shoppingList.id}`);
                 shoppingListRefresh();
             } catch (e) {
                 console.error("Failed to complete shopping list", e);
                 alert("Une erreur est survenue lors de la finalisation des courses.");
+            } finally {
+                setIsEndingShopping(false);
             }
         })();
     };
@@ -297,6 +303,7 @@ export default function ShoppingInProgress() {
                     <ShoppingListInProgressInfo
                         view={shoppingList}
                         onEndShopping={handleEndShopping}
+                        isEndingShopping={isEndingShopping}
                     />
                 </div>
 
@@ -420,6 +427,19 @@ export default function ShoppingInProgress() {
                                         </div>
                                     </>
                                 )}
+                                <div className="divider"></div>
+                                <div className="flex justify-end">
+                                    <button
+                                        type="button"
+                                        className="btn btn-neutral btn-soft"
+                                        disabled={items.length < 2}
+                                        onClick={() => {
+                                            navigate("/shopping_sort");
+                                        }}
+                                    >
+                                        Trier la liste
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>

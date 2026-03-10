@@ -110,7 +110,7 @@ export default function ShoppingMalls() {
     }, [sortedMalls, searchQuery]);
 
     return (
-        <div className="p-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
+        <div className="pt-4 md:px-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
             <div className="card bg-base-300 shadow-xl">
                 <div className="card-body gap-4">
                     <div className="flex items-center justify-between gap-3">

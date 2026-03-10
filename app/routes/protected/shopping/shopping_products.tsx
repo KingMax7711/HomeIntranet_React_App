@@ -10,6 +10,7 @@ import ProductCard, {
 import FormAjoutProduit from "~/components/shopping_components/FormAjoutProduit";
 import FormEditProduit from "~/components/shopping_components/FormEditProduit";
 import { useShoppingListStore } from "~/stores/shopping_list";
+import { capitalizeFirstLetter } from "~/tools/formater";
 
 const endpointRegisterArticle = "/shopping_list_globals/register_article";
 
@@ -26,6 +27,7 @@ export default function ShoppingProducts() {
     const [products, setProducts] = useState<ProductCatalogItem[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [status, setStatus] = useState<"idle" | "loading" | "loaded" | "error">("idle");
+    const [lastCategory, setLastCategory] = useState<string>("");
 
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -90,6 +92,7 @@ export default function ShoppingProducts() {
                 const payload = {
                     shopping_list: listId,
                     in_promotion: false,
+                    need_coupons: false,
                     price,
                     quantity: 1,
                     product: product.id,
@@ -175,7 +178,7 @@ export default function ShoppingProducts() {
     }, [sortedProducts, searchQuery]);
 
     return (
-        <div className="p-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
+        <div className="pt-4 md:px-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
             <div className="card bg-base-300 shadow-xl">
                 <div className="card-body gap-4">
                     <div className="flex items-center justify-between gap-3">
@@ -227,15 +230,30 @@ export default function ShoppingProducts() {
                     ) : (
                         <div className="flex flex-col gap-3">
                             {filteredProducts.map((p) => (
-                                <ProductCard
-                                    key={p.id}
-                                    product={p}
-                                    onEdit={handleOpenEdit}
-                                    onDelete={handleDelete}
-                                    onAddToList={handleAddToList}
-                                    addToListState={addToListById[p.id] ?? "idle"}
-                                    addToListDisabled={!shoppingList?.id}
-                                />
+                                <>
+                                    <ProductCard
+                                        key={p.id}
+                                        product={p}
+                                        onEdit={handleOpenEdit}
+                                        onDelete={handleDelete}
+                                        onAddToList={handleAddToList}
+                                        addToListState={addToListById[p.id] ?? "idle"}
+                                        addToListDisabled={!shoppingList?.id}
+                                    />
+                                    {console.log(p)}
+                                    {p.category !==
+                                        filteredProducts[filteredProducts.indexOf(p) + 1]
+                                            ?.category && (
+                                        <div className="divider my-0">
+                                            {" "}
+                                            {capitalizeFirstLetter(
+                                                filteredProducts[
+                                                    filteredProducts.indexOf(p) + 1
+                                                ]?.category || "",
+                                            )}{" "}
+                                        </div>
+                                    )}
+                                </>
                             ))}
                         </div>
                     )}

@@ -14,6 +14,7 @@ import { useAuthStore } from "./stores/auth";
 import NotFound from "./components/404";
 
 export const links: Route.LinksFunction = () => [
+    { rel: "icon", href: "/logo.ico" },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     {
         rel: "preconnect",

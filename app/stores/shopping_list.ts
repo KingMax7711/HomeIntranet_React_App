@@ -18,10 +18,12 @@ export type ProductBase = {
 
 export type ShoppingListItemDetailed = {
     id: number;
+    custom_sort_index: number | null;
     quantity: number;
     price?: number;
     status: "pending" | "found" | "not_found" | "given_up";
     in_promotion?: boolean;
+    need_coupons?: boolean;
 
     product?: ProductBase | null;
     affected_user?: UserInList | null;

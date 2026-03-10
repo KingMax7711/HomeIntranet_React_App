@@ -11,7 +11,18 @@ export function capitalizeFirstLetter(str: string) {
 }
 
 export function formatDate(dateStr: string) {
-    const date = new Date(dateStr);
+    const trimmed = (dateStr ?? "").trim();
+
+    // Cas fréquent côté API: date ISO sans heure (YYYY-MM-DD).
+    // `new Date("YYYY-MM-DD")` est interprété en UTC et peut décaler le jour
+    // en affichage local; on reconstruit une date locale.
+    const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(trimmed);
+    const date = m
+        ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))
+        : new Date(trimmed);
+
+    if (Number.isNaN(date.getTime())) return "—";
+
     return date.toLocaleDateString("fr-FR", {
         year: "numeric",
         month: "long",
@@ -38,4 +49,24 @@ export function formatCurrencyEUR(value: number) {
         currency: "EUR",
         maximumFractionDigits: 2,
     }).format(safe);
+}
+
+export function sortByCustomSortIndex<T extends { custom_sort_index?: number | null }>(
+    items: T[],
+): T[] {
+    const decorated = items.map((item, originalPosition) => {
+        const raw = item.custom_sort_index;
+        const idx =
+            typeof raw === "number" && Number.isFinite(raw)
+                ? raw
+                : Number.POSITIVE_INFINITY;
+        return { item, idx, originalPosition };
+    });
+
+    decorated.sort((a, b) => {
+        if (a.idx !== b.idx) return a.idx - b.idx;
+        return a.originalPosition - b.originalPosition;
+    });
+
+    return decorated.map((d) => d.item);
 }

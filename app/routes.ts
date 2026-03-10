@@ -11,6 +11,11 @@ export default [
             ),
             route("shopping_products", "routes/protected/shopping/shopping_products.tsx"),
             route("shopping_malls", "routes/protected/shopping/shopping_malls.tsx"),
+            route("shopping_sort", "routes/protected/shopping/shopping_sort.tsx"),
+            route(
+                "shopping_recurrences",
+                "routes/protected/shopping/shopping_productsRecurrences.tsx",
+            ),
         ]),
     ]),
     layout("routes/auth/layout.tsx", [

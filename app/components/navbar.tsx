@@ -68,7 +68,7 @@ export default function Navbar() {
         })();
 
         return () => controller.abort();
-    }, [user?.id]);
+    }, [user?.id, user?.house_id]);
 
     const handleLogout = async () => {
         if (isLoggingOut) return;
@@ -85,7 +85,12 @@ export default function Navbar() {
         <div className="navbar bg-base-100">
             <div className="navbar-start">
                 <div className="">
-                    <a className="btn btn-ghost normal-case text-xl">HomeFlow</a>
+                    <button
+                        className="btn btn-ghost normal-case text-xl"
+                        onClick={() => navigate("/")}
+                    >
+                        HomeFlow
+                    </button>
                 </div>
             </div>
             <div className="navbar-center">

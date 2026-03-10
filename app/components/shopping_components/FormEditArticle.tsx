@@ -14,6 +14,7 @@ type FormValues = {
     quantity: number;
     price: number;
     inPromotion: boolean;
+    needCoupons: boolean;
 };
 
 const endpointCustomUpdate = (id: number) => `/shopping_list_items/custom_update/${id}`;
@@ -32,6 +33,7 @@ export default function FormEditArticle({ item }: Props) {
                     ? item.price
                     : 0,
             inPromotion: !!item?.in_promotion,
+            needCoupons: !!item?.need_coupons,
         };
     }, [item]);
 
@@ -60,7 +62,7 @@ export default function FormEditArticle({ item }: Props) {
         const safeCurrent =
             typeof current === "number" && !Number.isNaN(current) ? current : 0;
         const nextRaw = safeCurrent + delta;
-        const nextRounded = Math.round(nextRaw * 10) / 10;
+        const nextRounded = Math.round(nextRaw * 100) / 100;
         const next = Math.max(0, nextRounded);
         setValue("price", next, { shouldDirty: true, shouldValidate: true });
     };
@@ -83,6 +85,7 @@ export default function FormEditArticle({ item }: Props) {
             quantity: values.quantity,
             price: values.price,
             in_promotion: !!values.inPromotion,
+            need_coupons: !!values.needCoupons,
         };
 
         try {
@@ -185,7 +188,7 @@ export default function FormEditArticle({ item }: Props) {
                                 inputMode="decimal"
                                 className={`input input-bordered flex-1 ${errors.price ? "input-error" : ""}`}
                                 min={0}
-                                step={0.1}
+                                step={0.01}
                                 {...register("price", {
                                     valueAsNumber: true,
                                     required: "Le prix est requis",
@@ -217,17 +220,26 @@ export default function FormEditArticle({ item }: Props) {
                             </p>
                         ) : null}
                     </div>
-                </div>
-
-                <div className="form-control mt-3">
-                    <label className="label cursor-pointer justify-start gap-3">
-                        <input
-                            type="checkbox"
-                            className="checkbox"
-                            {...register("inPromotion")}
-                        />
-                        <span className="label-text">Article en promotion ?</span>
-                    </label>
+                    <div className="form-control mt-3">
+                        <label className="label cursor-pointer justify-start gap-3">
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                {...register("inPromotion")}
+                            />
+                            <span className="label-text">Article en promotion ?</span>
+                        </label>
+                    </div>
+                    <div className="form-control mt-3">
+                        <label className="label cursor-pointer justify-start gap-3">
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                {...register("needCoupons")}
+                            />
+                            <span className="label-text">Besoin de coupons ?</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 

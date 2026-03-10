@@ -5,6 +5,7 @@ import {
     capitalizeFirstLetter,
     capitalizeAllWords,
 } from "~/tools/formater";
+import { useAuthStore } from "~/stores/auth";
 
 const statusLabel = (status: ShoppingListView["status"]) => {
     switch (status) {
@@ -80,6 +81,26 @@ export default function ShoppingListInfo({
         if (typeof apiTotal === "number" && Number.isFinite(apiTotal)) return apiTotal;
         return computeTotalFromItems(view);
     }, [view]);
+
+    const userHouseId = useAuthStore((s) => s.user?.house_id);
+
+    if (!userHouseId) {
+        return (
+            <div className="card w-full h-fit bg-base-300 shadow-xl">
+                <div className="card-body gap-5">
+                    <h2 className="card-title">Aucune maison associée</h2>
+                    <p className="text-sm opacity-70">
+                        Votre compte n'est actuellement associé à aucune maison. <br />
+                        {"\n"}
+                        <span className="italic">
+                            Merci de créer ou rejoindre une maison pour accéder aux
+                            fonctionnalités de gestion des listes de courses.{" "}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     if (!view)
         return (

@@ -16,6 +16,7 @@ export default function ShoppingListPreparationItemCard({
     const price = item.price;
     const comment = item.product?.comment?.trim() || "";
     const in_promotion = item.in_promotion;
+    const need_coupons = item.need_coupons;
 
     return (
         <div className={`card bg-base-100 shadow`}>
@@ -29,6 +30,11 @@ export default function ShoppingListPreparationItemCard({
                             {in_promotion && (
                                 <span className="hidden md:inline-block badge badge-sm badge-success badge-outline ml-3">
                                     En promotion
+                                </span>
+                            )}
+                            {need_coupons && (
+                                <span className="hidden md:inline-block badge badge-sm badge-warning badge-outline ml-3">
+                                    Nécessite un coupon
                                 </span>
                             )}
                         </div>
@@ -73,6 +79,13 @@ export default function ShoppingListPreparationItemCard({
                         <div className="md:hidden flex items-center justify-start gap-3 col-span-full">
                             <span className="badge badge-sm badge-success badge-outline">
                                 Article en promotion !
+                            </span>
+                        </div>
+                    )}
+                    {need_coupons && (
+                        <div className="md:hidden flex items-center justify-start gap-3 col-span-full">
+                            <span className="badge badge-sm badge-warning badge-outline">
+                                Nécessite un coupon !
                             </span>
                         </div>
                     )}
