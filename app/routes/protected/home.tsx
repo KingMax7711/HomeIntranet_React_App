@@ -159,7 +159,7 @@ export default function Home() {
     };
 
     return (
-        <div className="grid md:grid-cols-3 md:grid-rows-2 gap-6 md:px-10">
+        <div className="grid md:grid-cols-3 gap-6 md:px-10">
             <div className="flex flex-col gap-8">
                 <UserCard user={user} />
                 <HouseCard

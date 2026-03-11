@@ -1,5 +1,10 @@
 import type { shoppingRecap } from "~/types/shoppingRecap";
-import { capitalizeAllWords, formatCurrencyEUR, formatDateTime } from "~/tools/formater";
+import {
+    capitalizeAllWords,
+    capitalizeFirstLetter,
+    formatCurrencyEUR,
+    formatDateTime,
+} from "~/tools/formater";
 
 function getStatusLabel(status: shoppingRecap["status"]) {
     switch (status) {
@@ -46,7 +51,9 @@ export default function ShoppingRecapCard({
 
     const houseName = capitalizeAllWords((shoppingRecap.house_name ?? "").trim());
     const mallName = capitalizeAllWords((shoppingRecap.mall_name ?? "").trim());
-    const mallLocation = (shoppingRecap.mall_location ?? "").trim();
+    const mallLocation = capitalizeFirstLetter(
+        (shoppingRecap.mall_location ?? "").trim(),
+    );
     const statusLabel = getStatusLabel(shoppingRecap.status);
     const statusBadgeClass = getStatusBadgeClass(shoppingRecap.status);
 

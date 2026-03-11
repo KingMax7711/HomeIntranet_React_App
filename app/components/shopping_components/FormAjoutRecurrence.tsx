@@ -249,9 +249,9 @@ export default function FormAjoutRecurrence({
                                 <div className="text-lg font-semibold truncate">
                                     {selectedProduct
                                         ? capitalizeAllWords(selectedProduct.name)
-                                        : "Aucun produit sélectionné"}
+                                        : "Aucun produit"}
                                 </div>
-                                <div className="text-sm opacity-70 truncate mt-1">
+                                <div className="text-sm opacity-70 mt-1">
                                     {selectedProduct
                                         ? capitalizeFirstLetter(
                                               selectedProduct.category?.trim() ||
@@ -261,7 +261,7 @@ export default function FormAjoutRecurrence({
                                 </div>
                             </div>
                             <span
-                                className={`badge badge-outline ${selectedProduct ? "badge-primary" : "badge-ghost opacity-70"}`}
+                                className={`badge badge-outline min-w-fit ${selectedProduct ? "badge-primary" : "badge-ghost opacity-70"}`}
                             >
                                 {selectedProduct ? "Sélectionné" : "En attente"}
                             </span>
