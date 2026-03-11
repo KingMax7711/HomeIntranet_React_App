@@ -38,8 +38,8 @@ export default function UserCard({ user }: { user: User | null }) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="flex items-center justify-start gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="flex items-center justify-start gap-3 md:col-span-2">
                         <span className="text-sm opacity-70">Email</span>
                         <span className="font-medium truncate">{email || "—"}</span>
                     </div>
