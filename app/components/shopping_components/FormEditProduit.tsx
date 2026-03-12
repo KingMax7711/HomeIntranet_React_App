@@ -7,6 +7,7 @@ import { capitalizeAllWords, capitalizeFirstLetter } from "~/tools/formater";
 
 type Props = {
     product: ProductCatalogItem | null;
+    categories: CategoryLite[];
     onDone?: () => void | Promise<void>;
 };
 
@@ -25,7 +26,6 @@ type FormValues = {
 const normalize = (s: string) => s.trim().toLowerCase();
 const safeTrim = (s: unknown) => (typeof s === "string" ? s.trim() : "");
 
-const endpointAllCategories = "/shopping_list_globals/all_categories";
 const endpointUpdateProduct = "/shopping_list_globals/update_product_custom";
 
 const categoryLabelFromProduct = (p: ProductCatalogItem | null): string => {
@@ -40,30 +40,11 @@ const categoryLabelFromProduct = (p: ProductCatalogItem | null): string => {
     return "";
 };
 
-export default function FormEditProduit({ product, onDone }: Props) {
-    const [categories, setCategories] = useState<CategoryLite[]>([]);
+export default function FormEditProduit({ product, categories, onDone }: Props) {
     const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
     const formRef = useRef<HTMLFormElement | null>(null);
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        (async () => {
-            try {
-                const r = await apiClient.get<CategoryLite[]>(endpointAllCategories, {
-                    signal: controller.signal,
-                });
-                setCategories(Array.isArray(r.data) ? r.data : []);
-            } catch (e) {
-                if (axios.isAxiosError(e) && e.code === "ERR_CANCELED") return;
-                console.error("Error fetching categories", e);
-            }
-        })();
-
-        return () => controller.abort();
-    }, []);
 
     const defaultValues = useMemo<FormValues>(() => {
         return {

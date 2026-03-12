@@ -19,15 +19,15 @@ type FormValues = {
 const normalize = (s: string) => s.trim().toLowerCase();
 const safeTrim = (s: unknown) => (typeof s === "string" ? s.trim() : "");
 
-const endpointAllCategories = "/shopping_list_globals/all_categories";
 const endpointCreateProduct = "/shopping_list_globals/create_product_custom";
 
 export default function FormAjoutProduit({
+    categories,
     onDone,
 }: {
+    categories: CategoryLite[];
     onDone?: () => void | Promise<void>;
 }) {
-    const [categories, setCategories] = useState<CategoryLite[]>([]);
     const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -39,24 +39,6 @@ export default function FormAjoutProduit({
         defaultPrice: undefined,
         comment: "",
     };
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        (async () => {
-            try {
-                const r = await apiClient.get<CategoryLite[]>(endpointAllCategories, {
-                    signal: controller.signal,
-                });
-                setCategories(Array.isArray(r.data) ? r.data : []);
-            } catch (e) {
-                if (axios.isAxiosError(e) && e.code === "ERR_CANCELED") return;
-                console.error("Error fetching categories", e);
-            }
-        })();
-
-        return () => controller.abort();
-    }, []);
 
     const {
         register,
