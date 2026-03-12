@@ -2,7 +2,6 @@ import type { Route } from "./+types/shopping_sort";
 import { useMemo, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useNavigate } from "react-router";
-import { capitalizeFirstLetter } from "~/tools/formater";
 import axios from "axios";
 import {
     DndContext,
@@ -25,7 +24,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { useShoppingListStore } from "~/stores/shopping_list";
 import type { ShoppingListItemDetailed } from "~/stores/shopping_list";
-import { sortByCustomSortIndex } from "~/tools/formater";
+import { capitalizeFirstLetter, sortByCustomSortIndex } from "~/tools/formater";
 import { apiClient } from "~/api/apiClient";
 
 export function meta() {
@@ -38,18 +37,15 @@ export function meta() {
 type SortableItemProps = {
     id: number;
     item: ShoppingListItemDetailed;
-    grabWholeCard?: boolean;
 };
 
-function SortableItemRow({ id, item, grabWholeCard }: SortableItemProps) {
+function SortableItemRow({ id, item }: SortableItemProps) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({ id });
 
     const style: CSSProperties = {
         transform: CSS.Transform.toString(transform),
         transition,
-        touchAction: grabWholeCard ? "none" : "auto",
-        WebkitTouchCallout: "none",
     };
 
     const name = item.product?.name ?? "Article";
@@ -69,32 +65,21 @@ function SortableItemRow({ id, item, grabWholeCard }: SortableItemProps) {
             style={style}
             className={
                 "card bg-base-300 shadow-xl select-none " +
-                (grabWholeCard ? "cursor-grab active:cursor-grabbing " : "") +
                 (isDragging ? "opacity-80" : "")
             }
-            {...(grabWholeCard ? { ...attributes, ...listeners } : {})}
         >
             <div className="card-body py-4 px-4">
                 <div className="flex items-center gap-3">
-                    {grabWholeCard ? (
-                        <div
-                            className="btn btn-ghost md:btn-sm pointer-events-none"
-                            aria-hidden
-                        >
-                            ≡
-                        </div>
-                    ) : (
-                        <button
-                            type="button"
-                            className="btn btn-ghost md:btn-sm cursor-grab active:cursor-grabbing"
-                            aria-label="Déplacer"
-                            style={{ touchAction: "none", WebkitTouchCallout: "none" }}
-                            {...attributes}
-                            {...listeners}
-                        >
-                            ≡
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        className="btn btn-ghost min-h-11 min-w-11 cursor-grab p-0 text-lg active:cursor-grabbing md:btn-sm md:min-h-0 md:min-w-0"
+                        aria-label="Déplacer"
+                        style={{ touchAction: "none", WebkitTouchCallout: "none" }}
+                        {...attributes}
+                        {...listeners}
+                    >
+                        ≡
+                    </button>
 
                     <div className="flex-1 min-w-0">
                         <div className="font-semibold truncate">
@@ -306,7 +291,7 @@ export default function ShoppingSort() {
                     <h1 className="text-xl font-bold">Trier la liste</h1>
                     <p className="text-sm opacity-70">
                         {isCoarsePointer
-                            ? "Appui long puis glisser pour déplacer les articles."
+                            ? "Maintiens la poignée puis glisse pour déplacer les articles."
                             : "Glisse-dépose les articles pour définir l'ordre d'affichage."}
                     </p>
                 </div>
@@ -360,12 +345,7 @@ export default function ShoppingSort() {
                     >
                         <div className="flex flex-col gap-3">
                             {orderedItems.map((item) => (
-                                <SortableItemRow
-                                    key={item.id}
-                                    id={item.id}
-                                    item={item}
-                                    grabWholeCard={isCoarsePointer}
-                                />
+                                <SortableItemRow key={item.id} id={item.id} item={item} />
                             ))}
                         </div>
                     </SortableContext>
