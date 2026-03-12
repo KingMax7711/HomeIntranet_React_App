@@ -265,7 +265,10 @@ export default function ShoppingProducts() {
 
             <dialog ref={addDialogRef} className="modal" tabIndex={-1}>
                 <div className="modal-box w-11/12 max-w-none sm:max-w-2xl max-h-[90dvh] sm:max-h-[calc(100vh-6rem)] overflow-y-auto overscroll-contain px-3 sm:px-6 pt-[calc(env(safe-area-inset-top)+0.75rem)] pb-[calc(env(safe-area-inset-bottom)+0.75rem)] sm:pt-6 sm:pb-6 rounded-3xl">
-                    <FormAjoutProduit onDone={() => setRefreshIndex((v) => v + 1)} />
+                    <FormAjoutProduit
+                        categories={categories}
+                        onDone={() => setRefreshIndex((v) => v + 1)}
+                    />
                 </div>
             </dialog>
 
@@ -280,6 +283,7 @@ export default function ShoppingProducts() {
                         Édition du produit
                     </h2>
                     <FormEditProduit
+                        categories={categories}
                         product={selectedProduct}
                         onDone={() => setRefreshIndex((v) => v + 1)}
                     />

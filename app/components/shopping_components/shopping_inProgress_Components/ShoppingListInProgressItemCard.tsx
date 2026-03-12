@@ -10,7 +10,7 @@ const statusMeta = (status: ShoppingListItemDetailed["status"]) => {
     switch (status) {
         case "found":
             return {
-                badgeLabel: "Dans le caddie",
+                badgeLabel: "Caddie",
                 badgeClass: "badge badge-success badge-outline",
                 headerClass: "bg-success/10 text-base-content border-b border-success/20",
                 cardAccentClass: "border border-success/30",
@@ -85,19 +85,19 @@ export default function ShoppingListInProgressItemCard({
                     </div>
                     <div className="flex flex-col items-end gap-2 shrink-0">
                         <span className={meta.badgeClass}>{meta.badgeLabel}</span>
-                        <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                            {in_promotion && (
-                                <span className="badge badge-sm badge-success badge-outline opacity-90 self-end md:self-auto">
-                                    En promotion
-                                </span>
-                            )}
-                            {need_coupons && (
-                                <span className="badge badge-sm badge-warning badge-outline opacity-90 self-end md:self-auto">
-                                    Besoin de coupons
-                                </span>
-                            )}
-                        </div>
                     </div>
+                </div>
+                <div className="flex flex-row gap-2 mt-2">
+                    {in_promotion && (
+                        <span className="badge badge-sm badge-success badge-outline opacity-90 self-end md:self-auto">
+                            En promotion
+                        </span>
+                    )}
+                    {need_coupons && (
+                        <span className="badge badge-sm badge-warning badge-outline opacity-90 self-end md:self-auto">
+                            Besoin de coupons
+                        </span>
+                    )}
                 </div>
             </div>
 

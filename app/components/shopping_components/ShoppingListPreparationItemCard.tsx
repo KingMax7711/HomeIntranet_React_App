@@ -20,7 +20,7 @@ export default function ShoppingListPreparationItemCard({
 
     return (
         <div className={`card bg-base-100 shadow`}>
-            <div className="card-body p-4 gap-3">
+            <div className="card-body p-4 md:gap-3">
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                         <div className="flex items-center gap-1">
@@ -40,7 +40,7 @@ export default function ShoppingListPreparationItemCard({
                         </div>
                         <p className="text-sm opacity-70 truncate">{category}</p>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 shrink-0">
                         <button
                             type="button"
                             className="btn btn-sm btn-outline"
