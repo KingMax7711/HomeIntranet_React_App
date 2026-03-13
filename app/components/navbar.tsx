@@ -4,6 +4,7 @@ import {
     LogOut,
     NotebookPen,
     ShoppingBasket,
+    Settings,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
@@ -118,6 +119,14 @@ export default function Navbar() {
                                 className="btn btn-ghost btn-circle"
                             >
                                 <NotebookPen className="w-6 h-6" />
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={() => navigate("/settings")}
+                                className="btn btn-ghost btn-circle"
+                            >
+                                <Settings className="w-6 h-6" />
                             </button>
                         </li>
                     </ul>
