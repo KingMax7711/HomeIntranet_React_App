@@ -53,13 +53,18 @@ export default function Settings() {
         isUpdatingProfile ||
         !user ||
         !hasProfileChanges ||
-        (!trimmedFirstName && !trimmedLastName);
+        (!trimmedFirstName && !trimmedLastName) ||
+        (trimmedFirstName.length > 0 && trimmedFirstName.length < 2) ||
+        (trimmedLastName.length > 0 && trimmedLastName.length < 2);
 
     const isPasswordButtonDisabled =
         isUpdatingPassword ||
         !currentPassword ||
+        currentPassword.length < 6 ||
         !newPassword ||
+        newPassword.length < 6 ||
         !confirmPassword ||
+        confirmPassword.length < 6 ||
         newPassword !== confirmPassword;
 
     const handleUpdateProfile = async () => {
@@ -67,6 +72,15 @@ export default function Settings() {
 
         setProfileError(null);
         setProfileMessage(null);
+        if (trimmedFirstName.length > 0 && trimmedFirstName.length < 2) {
+            setProfileError("Le prénom doit contenir au moins 2 caractères.");
+            return;
+        }
+        if (trimmedLastName.length > 0 && trimmedLastName.length < 2) {
+            setProfileError("Le nom doit contenir au moins 2 caractères.");
+            return;
+        }
+
         setIsUpdatingProfile(true);
 
         try {
@@ -100,6 +114,14 @@ export default function Settings() {
 
         setPasswordError(null);
         setPasswordMessage(null);
+
+        if (newPassword.length < 6) {
+            setPasswordError(
+                "Le nouveau mot de passe doit contenir au moins 6 caractères.",
+            );
+            return;
+        }
+
         setIsUpdatingPassword(true);
 
         try {
@@ -170,7 +192,7 @@ export default function Settings() {
     const roleLabel = user?.privileges === "owner" ? "Propriétaire" : "Utilisateur";
 
     return (
-        <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+        <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
             <div className="grid md:grid-cols-3 gap-5">
                 <div className="md:col-span-1 flex flex-col gap-5">
                     <div className="card bg-base-200 shadow">
@@ -233,9 +255,18 @@ export default function Settings() {
                                         type="text"
                                         className="input input-bordered w-full"
                                         placeholder="Votre prénom"
+                                        minLength={2}
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
                                     />
+                                    {trimmedFirstName.length > 0 &&
+                                        trimmedFirstName.length < 2 && (
+                                            <label className="label py-1">
+                                                <span className="label-text-alt text-error">
+                                                    2 caractères minimum
+                                                </span>
+                                            </label>
+                                        )}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
@@ -245,9 +276,18 @@ export default function Settings() {
                                         type="text"
                                         className="input input-bordered w-full"
                                         placeholder="Votre nom"
+                                        minLength={2}
                                         value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
                                     />
+                                    {trimmedLastName.length > 0 &&
+                                        trimmedLastName.length < 2 && (
+                                            <label className="label py-1">
+                                                <span className="label-text-alt text-error">
+                                                    2 caractères minimum
+                                                </span>
+                                            </label>
+                                        )}
                                 </div>
                             </div>
                             <div className="card-actions justify-end">
@@ -290,6 +330,8 @@ export default function Settings() {
                                             }
                                             className="input input-bordered w-full pr-12"
                                             placeholder="Mot de passe actuel"
+                                            autoComplete="current-password"
+                                            minLength={6}
                                             value={currentPassword}
                                             onChange={(e) =>
                                                 setCurrentPassword(e.target.value)
@@ -313,7 +355,15 @@ export default function Settings() {
                                                 <Eye size={16} />
                                             )}
                                         </button>
-                                    </div>
+                                    </div>{" "}
+                                    {currentPassword.length > 0 &&
+                                        currentPassword.length < 6 && (
+                                            <label className="label py-1">
+                                                <span className="label-text-alt text-error">
+                                                    6 caractères minimum
+                                                </span>
+                                            </label>
+                                        )}{" "}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
@@ -326,6 +376,8 @@ export default function Settings() {
                                             type={showNewPassword ? "text" : "password"}
                                             className="input input-bordered w-full pr-12"
                                             placeholder="Nouveau mot de passe"
+                                            autoComplete="new-password"
+                                            minLength={6}
                                             value={newPassword}
                                             onChange={(e) =>
                                                 setNewPassword(e.target.value)
@@ -349,7 +401,14 @@ export default function Settings() {
                                                 <Eye size={16} />
                                             )}
                                         </button>
-                                    </div>
+                                    </div>{" "}
+                                    {newPassword.length > 0 && newPassword.length < 6 && (
+                                        <label className="label py-1">
+                                            <span className="label-text-alt text-error">
+                                                6 caractères minimum
+                                            </span>
+                                        </label>
+                                    )}{" "}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
@@ -364,6 +423,8 @@ export default function Settings() {
                                             }
                                             className="input input-bordered w-full pr-12"
                                             placeholder="Confirmer"
+                                            autoComplete="new-password"
+                                            minLength={6}
                                             value={confirmPassword}
                                             onChange={(e) =>
                                                 setConfirmPassword(e.target.value)
@@ -388,6 +449,23 @@ export default function Settings() {
                                             )}
                                         </button>
                                     </div>
+                                    {confirmPassword.length > 0 &&
+                                        confirmPassword !== newPassword && (
+                                            <label className="label py-1">
+                                                <span className="label-text-alt text-error">
+                                                    Les mots de passe ne correspondent pas
+                                                </span>
+                                            </label>
+                                        )}
+                                    {confirmPassword.length > 0 &&
+                                        confirmPassword.length < 6 &&
+                                        confirmPassword === newPassword && (
+                                            <label className="label py-1">
+                                                <span className="label-text-alt text-error">
+                                                    6 caractères minimum
+                                                </span>
+                                            </label>
+                                        )}
                                 </div>
                             </div>
                             <div className="card-actions justify-end">
