@@ -132,7 +132,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
 
     _fetchMe: async (token: string) => {
-        const r = await apiClient.get<AuthUser>("/users/me/", {
+        const r = await apiClient.get<AuthUser>("/users/me", {
             headers: { Authorization: `Bearer ${token}` },
             skipAuthRefresh: true,
         });
