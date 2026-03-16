@@ -24,82 +24,39 @@ export default function ProductRedirectCard() {
     useEffect(() => {
         const controller = new AbortController();
         setLoading(true);
-
-        (async () => {
-            try {
-                const r = await apiClient.get("/products/total", {
-                    signal: controller.signal,
-                });
-                setTotalProducts(r.data);
-            } catch (e) {
-                setTotalProducts(null);
-            } finally {
-                setLoading(false);
-            }
-        })();
-
-        return () => controller.abort();
-    }, [refreshIndex]);
-
-    useEffect(() => {
-        const controller = new AbortController();
-        setLoadingMalls(true);
-
-        (async () => {
-            try {
-                const r = await apiClient.get("/malls/all", {
-                    signal: controller.signal,
-                });
-                setTotalMalls(Array.isArray(r.data) ? r.data.length : null);
-            } catch (e) {
-                setTotalMalls(null);
-            } finally {
-                setLoadingMalls(false);
-            }
-        })();
-
-        return () => controller.abort();
-    }, [refreshMallsIndex]);
-
-    useEffect(() => {
-        const controller = new AbortController();
         setLoadingCategories(true);
-
-        (async () => {
-            try {
-                const r = await apiClient.get("/categories/total", {
-                    signal: controller.signal,
-                });
-                setTotalCategories(r.data);
-            } catch (e) {
-                setTotalCategories(null);
-            } finally {
-                setLoadingCategories(false);
-            }
-        })();
-
-        return () => controller.abort();
-    }, [refreshCategoriesIndex]);
-
-    useEffect(() => {
-        const controller = new AbortController();
+        setLoadingMalls(true);
         setLoadingRecurrences(true);
 
         (async () => {
             try {
-                const r = await apiClient.get("/product_recurrences/all", {
+                const r = await apiClient.get("/shopping_list_globals/catalogue_recap", {
                     signal: controller.signal,
                 });
-                setTotalRecurrences(Array.isArray(r.data) ? r.data.length : null);
+                setTotalProducts(r.data.products_total);
+                setTotalCategories(r.data.categories_total);
+                setTotalMalls(r.data.malls_total);
+                setTotalRecurrences(r.data.recurrences_total);
             } catch (e) {
+                setTotalProducts(null);
+                setTotalCategories(null);
+                setTotalMalls(null);
                 setTotalRecurrences(null);
             } finally {
+                setLoading(false);
+                setLoadingCategories(false);
+                setLoadingMalls(false);
                 setLoadingRecurrences(false);
             }
         })();
 
         return () => controller.abort();
-    }, [refreshRecurrencesIndex]);
+    }, [
+        refreshRecurrencesIndex,
+        refreshCategoriesIndex,
+        refreshMallsIndex,
+        refreshIndex,
+    ]);
 
     return (
         <div className="collapse collapse-arrow bg-base-300 shadow-xl rounded-box p-3">
