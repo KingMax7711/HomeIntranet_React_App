@@ -12,9 +12,10 @@ type Props = {
 
 type FormValues = {
     quantity: number;
-    price: number;
+    price: number | null;
     inPromotion: boolean;
     needCoupons: boolean;
+    article_comment: string | null;
 };
 
 const endpointCustomUpdate = (id: number) => `/shopping_list_items/custom_update/${id}`;
@@ -34,6 +35,7 @@ export default function FormEditArticle({ item }: Props) {
                     : 0,
             inPromotion: !!item?.in_promotion,
             needCoupons: !!item?.need_coupons,
+            article_comment: item?.product?.comment ?? null,
         };
     }, [item]);
 
@@ -86,6 +88,7 @@ export default function FormEditArticle({ item }: Props) {
             price: values.price,
             in_promotion: !!values.inPromotion,
             need_coupons: !!values.needCoupons,
+            comment: values.article_comment,
         };
 
         try {
@@ -217,6 +220,24 @@ export default function FormEditArticle({ item }: Props) {
                         {errors.price ? (
                             <p className="text-sm text-error mt-1">
                                 {String(errors.price.message)}
+                            </p>
+                        ) : null}
+                    </div>
+                    <div className="form-control mt-3 md:col-span-2">
+                        <label className="label-text">Commentaire (Article)</label>
+                        <textarea
+                            className={`textarea textarea-bordered w-full ${errors.article_comment ? "textarea-error" : ""}`}
+                            {...register("article_comment", {
+                                setValueAs: (v) =>
+                                    typeof v === "string" && v.trim().length > 0
+                                        ? v.trim()
+                                        : null,
+                            })}
+                            placeholder="Ajouter un commentaire..."
+                        />
+                        {errors.article_comment ? (
+                            <p className="text-sm text-error mt-1">
+                                {String(errors.article_comment.message)}
                             </p>
                         ) : null}
                     </div>

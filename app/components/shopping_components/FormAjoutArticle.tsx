@@ -25,12 +25,13 @@ type CategoryLite = {
 type FormValues = {
     productQuery: string;
     categoryName: string;
-    defaultPrice?: number;
+    defaultPrice?: number | null;
     comment: string;
     quantity: number;
-    price?: number;
+    price?: number | null;
     inPromotion: boolean;
     needCoupons: boolean;
+    article_comment: string;
 };
 
 const normalize = (s: string) => s.trim().toLowerCase();
@@ -57,12 +58,13 @@ export default function FormAjoutArticle() {
     const defaultFormValues: FormValues = {
         productQuery: "",
         categoryName: "",
-        defaultPrice: undefined,
+        defaultPrice: null,
         comment: "",
         quantity: 1,
-        price: undefined,
+        price: null,
         inPromotion: false,
         needCoupons: false,
+        article_comment: "",
     };
 
     useEffect(() => {
@@ -188,6 +190,11 @@ export default function FormAjoutArticle() {
 
     const closeDialog = () => {
         const dlg = formRef.current?.closest("dialog") as HTMLDialogElement | null;
+        reset(defaultFormValues);
+        setSelectedProduct(null);
+        setProductMenuOpen(false);
+        setCategoryMenuOpen(false);
+        setSubmitError(null);
         dlg?.close();
     };
 
@@ -243,6 +250,7 @@ export default function FormAjoutArticle() {
             price,
             quantity: values.quantity,
             product: productPayload,
+            comment: safeTrim(values.article_comment) || undefined,
         };
 
         try {
@@ -302,6 +310,7 @@ export default function FormAjoutArticle() {
                                     resetField("categoryName");
                                     resetField("defaultPrice");
                                     resetField("comment");
+                                    resetField("article_comment");
                                     setCategoryMenuOpen(false);
                                 }}
                             >
@@ -671,6 +680,24 @@ export default function FormAjoutArticle() {
                             {errors.price ? (
                                 <p className="text-sm text-error mt-1">
                                     {String(errors.price.message)}
+                                </p>
+                            ) : null}
+                        </div>
+                        <div className="form-control mt-3 md:col-span-2">
+                            <label className="label-text">Commentaire (Article)</label>
+                            <textarea
+                                className={`textarea textarea-bordered w-full ${errors.article_comment ? "textarea-error" : ""}`}
+                                {...register("article_comment", {
+                                    setValueAs: (v) =>
+                                        typeof v === "string" && v.trim().length > 0
+                                            ? v.trim()
+                                            : null,
+                                })}
+                                placeholder="Ajouter un commentaire..."
+                            />
+                            {errors.article_comment ? (
+                                <p className="text-sm text-error mt-1">
+                                    {String(errors.article_comment.message)}
                                 </p>
                             ) : null}
                         </div>
