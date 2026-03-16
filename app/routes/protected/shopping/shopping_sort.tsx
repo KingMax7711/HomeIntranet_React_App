@@ -84,6 +84,12 @@ function SortableItemRow({ id, item }: SortableItemProps) {
                     <div className="flex-1 min-w-0">
                         <div className="font-semibold truncate">
                             {capitalizeFirstLetter(name)}
+                            {" - "}
+                            <span className="italic opacity-70 font-normal">
+                                {item.product?.category
+                                    ? `${item.product.category}`
+                                    : null}
+                            </span>
                         </div>
                         <div className="text-xs opacity-70 flex gap-2">
                             <span>Qté: {qty}</span>
