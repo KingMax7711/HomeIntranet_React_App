@@ -17,6 +17,7 @@ export default [
                 "shopping_recurrences",
                 "routes/protected/shopping/shopping_productsRecurrences.tsx",
             ),
+            route("shopping_category", "routes/protected/shopping/shopping_category.tsx"),
         ]),
     ]),
     layout("routes/auth/layout.tsx", [
