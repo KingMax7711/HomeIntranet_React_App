@@ -7,6 +7,10 @@ export default function ProductRedirectCard() {
     const [loading, setLoading] = useState(false);
     const [refreshIndex, setRefreshIndex] = useState(0);
 
+    const [totalCategories, setTotalCategories] = useState<number | null>(null);
+    const [loadingCategories, setLoadingCategories] = useState(false);
+    const [refreshCategoriesIndex, setRefreshCategoriesIndex] = useState(0);
+
     const [totalMalls, setTotalMalls] = useState<number | null>(null);
     const [loadingMalls, setLoadingMalls] = useState(false);
     const [refreshMallsIndex, setRefreshMallsIndex] = useState(0);
@@ -59,6 +63,26 @@ export default function ProductRedirectCard() {
 
     useEffect(() => {
         const controller = new AbortController();
+        setLoadingCategories(true);
+
+        (async () => {
+            try {
+                const r = await apiClient.get("/categories/total", {
+                    signal: controller.signal,
+                });
+                setTotalCategories(r.data);
+            } catch (e) {
+                setTotalCategories(null);
+            } finally {
+                setLoadingCategories(false);
+            }
+        })();
+
+        return () => controller.abort();
+    }, [refreshCategoriesIndex]);
+
+    useEffect(() => {
+        const controller = new AbortController();
         setLoadingRecurrences(true);
 
         (async () => {
@@ -106,6 +130,35 @@ export default function ProductRedirectCard() {
                         className="btn btn-primary w-1/2"
                     >
                         Voir le catalogue
+                    </button>
+                </div>
+
+                <div className="divider my-4" />
+
+                <h3 className="font-semibold">Catégories</h3>
+                <p className="text-sm opacity-80 mt-1">
+                    {loadingCategories ? (
+                        <span className="loading loading-spinner loading-xs" />
+                    ) : totalCategories !== null ? (
+                        `Le catalogue contient ${totalCategories} catégorie${totalCategories > 1 ? "s" : ""}.`
+                    ) : (
+                        <span className="text-error">Indisponible</span>
+                    )}
+                </p>
+                <div className="flex gap-2 mt-3">
+                    <button
+                        type="button"
+                        className="btn btn-secondary w-1/2"
+                        onClick={() => setRefreshCategoriesIndex((i) => i + 1)}
+                    >
+                        Actualiser
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => navigate("/shopping_category")}
+                        className="btn btn-primary w-1/2"
+                    >
+                        Voir les catégories
                     </button>
                 </div>
 
