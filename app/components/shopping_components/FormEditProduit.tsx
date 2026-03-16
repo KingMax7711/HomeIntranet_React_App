@@ -104,7 +104,7 @@ export default function FormEditProduit({ product, categories, onDone }: Props) 
         const categoryTrim = safeTrim(values.categoryName);
         const resolvedCategory = categoryTrim
             ? categories.find((c) => normalize(c.name) === normalize(categoryTrim))
-            : undefined;
+            : null;
         const categoryPayload = categoryTrim
             ? resolvedCategory
                 ? resolvedCategory.id

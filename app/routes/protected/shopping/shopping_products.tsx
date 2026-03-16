@@ -240,7 +240,6 @@ export default function ShoppingProducts() {
                                         addToListState={addToListById[p.id] ?? "idle"}
                                         addToListDisabled={!shoppingList?.id}
                                     />
-                                    {console.log(p)}
                                     {p.category !==
                                         filteredProducts[filteredProducts.indexOf(p) + 1]
                                             ?.category && (
