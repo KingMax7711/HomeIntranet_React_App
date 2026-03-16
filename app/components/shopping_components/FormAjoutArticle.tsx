@@ -31,7 +31,7 @@ type FormValues = {
     price?: number | null;
     inPromotion: boolean;
     needCoupons: boolean;
-    article_comment: string;
+    articleComment: string;
 };
 
 const normalize = (s: string) => s.trim().toLowerCase();
@@ -64,7 +64,7 @@ export default function FormAjoutArticle() {
         price: null,
         inPromotion: false,
         needCoupons: false,
-        article_comment: "",
+        articleComment: "",
     };
 
     useEffect(() => {
@@ -250,7 +250,7 @@ export default function FormAjoutArticle() {
             price,
             quantity: values.quantity,
             product: productPayload,
-            comment: safeTrim(values.article_comment) || undefined,
+            comment: safeTrim(values.articleComment) || null,
         };
 
         try {
@@ -310,7 +310,7 @@ export default function FormAjoutArticle() {
                                     resetField("categoryName");
                                     resetField("defaultPrice");
                                     resetField("comment");
-                                    resetField("article_comment");
+                                    resetField("articleComment");
                                     setCategoryMenuOpen(false);
                                 }}
                             >
@@ -684,10 +684,12 @@ export default function FormAjoutArticle() {
                             ) : null}
                         </div>
                         <div className="form-control mt-3 md:col-span-2">
-                            <label className="label-text">Commentaire (Article)</label>
+                            <label className="label">
+                                <span className="label-text">Commentaire (Article)</span>
+                            </label>
                             <textarea
-                                className={`textarea textarea-bordered w-full ${errors.article_comment ? "textarea-error" : ""}`}
-                                {...register("article_comment", {
+                                className={`textarea textarea-bordered w-full ${errors.articleComment ? "textarea-error" : ""}`}
+                                {...register("articleComment", {
                                     setValueAs: (v) =>
                                         typeof v === "string" && v.trim().length > 0
                                             ? v.trim()
@@ -695,9 +697,9 @@ export default function FormAjoutArticle() {
                                 })}
                                 placeholder="Ajouter un commentaire..."
                             />
-                            {errors.article_comment ? (
+                            {errors.articleComment ? (
                                 <p className="text-sm text-error mt-1">
-                                    {String(errors.article_comment.message)}
+                                    {String(errors.articleComment.message)}
                                 </p>
                             ) : null}
                         </div>
