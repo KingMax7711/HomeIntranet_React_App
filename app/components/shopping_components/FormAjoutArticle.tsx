@@ -28,7 +28,6 @@ type FormValues = {
     defaultPrice?: number | null;
     comment: string;
     quantity: number;
-    price?: number | null;
     inPromotion: boolean;
     needCoupons: boolean;
     articleComment: string;
@@ -61,7 +60,6 @@ export default function FormAjoutArticle() {
         defaultPrice: null,
         comment: "",
         quantity: 1,
-        price: null,
         inPromotion: false,
         needCoupons: false,
         articleComment: "",
@@ -129,7 +127,7 @@ export default function FormAjoutArticle() {
 
     const productQuery = watch("productQuery");
     const categoryName = watch("categoryName");
-    const defaultPrice = watch("defaultPrice");
+    watch("defaultPrice");
 
     const bumpQuantity = (delta: number) => {
         const current = getValues("quantity");
@@ -149,21 +147,6 @@ export default function FormAjoutArticle() {
         setValue("defaultPrice", next, { shouldDirty: true, shouldValidate: true });
     };
 
-    const bumpPrice = (delta: number) => {
-        const current = getValues("price");
-        const safeCurrent =
-            typeof current === "number" && !Number.isNaN(current)
-                ? current
-                : typeof productDefaultPrice === "number" &&
-                    !Number.isNaN(productDefaultPrice)
-                  ? productDefaultPrice
-                  : 0;
-        const nextRaw = safeCurrent + delta;
-        const nextRounded = Math.round(nextRaw * 100) / 100;
-        const next = Math.max(0, nextRounded);
-        setValue("price", next, { shouldDirty: true, shouldValidate: true });
-    };
-
     const filteredProducts = useMemo(() => {
         const q = normalize(productQuery ?? "");
         if (!q) return [];
@@ -179,14 +162,6 @@ export default function FormAjoutArticle() {
         list.sort((a, b) => a.name.localeCompare(b.name));
         return list.slice(0, 8);
     }, [categories, categoryName]);
-
-    const productDefaultPrice = useMemo(() => {
-        const p = selectedProduct?.default_price;
-        if (typeof p === "number" && !Number.isNaN(p)) return p;
-        const d = defaultPrice;
-        if (typeof d === "number" && !Number.isNaN(d)) return d;
-        return undefined;
-    }, [selectedProduct, defaultPrice]);
 
     const closeDialog = () => {
         const dlg = formRef.current?.closest("dialog") as HTMLDialogElement | null;
@@ -236,18 +211,10 @@ export default function FormAjoutArticle() {
                   comment: safeTrim(values.comment) || undefined,
               };
 
-        let price = values.price;
-        if (typeof price !== "number" || Number.isNaN(price)) {
-            const fallback = selectedProduct?.default_price ?? values.defaultPrice;
-            price =
-                typeof fallback === "number" && !Number.isNaN(fallback) ? fallback : 0;
-        }
-
         const payload = {
             shopping_list: listId,
             in_promotion: !!values.inPromotion,
             need_coupons: !!values.needCoupons, // !!! API currently expects "need_coupons" but we use "needCoupon" in the form for consistency
-            price,
             quantity: values.quantity,
             product: productPayload,
             comment: safeTrim(values.articleComment) || null,
@@ -589,7 +556,7 @@ export default function FormAjoutArticle() {
                     <h4 className="font-semibold">Ajout dans la liste</h4>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                        <div className="form-control">
+                        <div className="form-control md:col-span-2">
                             <label className="label">
                                 <span className="label-text">Quantité</span>
                             </label>
@@ -635,54 +602,6 @@ export default function FormAjoutArticle() {
                             ) : null}
                         </div>
 
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Prix</span>
-                            </label>
-                            <div className="flex items-stretch gap-2">
-                                <input
-                                    type="number"
-                                    className={`input input-bordered flex-1 ${errors.price ? "input-error" : ""}`}
-                                    min={0}
-                                    step={0.01}
-                                    placeholder={
-                                        typeof productDefaultPrice === "number"
-                                            ? String(productDefaultPrice)
-                                            : ""
-                                    }
-                                    {...register("price", {
-                                        valueAsNumber: true,
-                                        min: {
-                                            value: 0,
-                                            message: "Le prix doit être ≥ 0",
-                                        },
-                                    })}
-                                />
-                                <div className="join md:hidden">
-                                    <button
-                                        type="button"
-                                        className="btn join-item"
-                                        onClick={() => bumpPrice(-0.1)}
-                                        aria-label="Diminuer le prix"
-                                    >
-                                        -
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn join-item"
-                                        onClick={() => bumpPrice(0.1)}
-                                        aria-label="Augmenter le prix"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                            {errors.price ? (
-                                <p className="text-sm text-error mt-1">
-                                    {String(errors.price.message)}
-                                </p>
-                            ) : null}
-                        </div>
                         <div className="form-control mt-3 md:col-span-2">
                             <label className="label">
                                 <span className="label-text">Commentaire (Article)</span>

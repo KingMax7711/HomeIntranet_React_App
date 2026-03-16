@@ -194,7 +194,6 @@ export default function FormEditArticle({ item }: Props) {
                                 step={0.01}
                                 {...register("price", {
                                     valueAsNumber: true,
-                                    required: "Le prix est requis",
                                     min: { value: 0, message: "Le prix doit être ≥ 0" },
                                 })}
                             />

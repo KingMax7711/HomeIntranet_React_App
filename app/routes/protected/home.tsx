@@ -61,7 +61,6 @@ export default function Home() {
 
         try {
             const r = await apiClient.post(`/houses/join/${houseCode}`);
-            console.log("Join house response:", r.data);
             ensureSession(); // Refresh user session to get updated house info
         } catch (e) {
             if (axios.isAxiosError(e)) {
@@ -91,7 +90,6 @@ export default function Home() {
             const r = await apiClient.post(`/houses/create`, {
                 name: newHouseName,
             });
-            console.log("Create house response:", r.data);
             ensureSession(); // Refresh user session to get updated house info
         } catch (e) {
             if (axios.isAxiosError(e)) {
@@ -141,7 +139,6 @@ export default function Home() {
 
         try {
             const r = await apiClient.post(`/houses/leave`);
-            console.log("Leave house response:", r.data);
             ensureSession(); // Refresh user session to get updated house info
         } catch (e) {
             if (axios.isAxiosError(e)) {
