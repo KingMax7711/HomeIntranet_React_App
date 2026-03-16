@@ -12,9 +12,10 @@ type Props = {
 
 type FormValues = {
     quantity: number;
-    price: number;
+    price: number | null;
     inPromotion: boolean;
     needCoupons: boolean;
+    articleComment: string | null;
 };
 
 const endpointCustomUpdate = (id: number) => `/shopping_list_items/custom_update/${id}`;
@@ -34,6 +35,7 @@ export default function FormEditArticle({ item }: Props) {
                     : 0,
             inPromotion: !!item?.in_promotion,
             needCoupons: !!item?.need_coupons,
+            articleComment: item?.product?.comment ?? null,
         };
     }, [item]);
 
@@ -86,6 +88,7 @@ export default function FormEditArticle({ item }: Props) {
             price: values.price,
             in_promotion: !!values.inPromotion,
             need_coupons: !!values.needCoupons,
+            comment: values.articleComment,
         };
 
         try {
@@ -191,7 +194,6 @@ export default function FormEditArticle({ item }: Props) {
                                 step={0.01}
                                 {...register("price", {
                                     valueAsNumber: true,
-                                    required: "Le prix est requis",
                                     min: { value: 0, message: "Le prix doit être ≥ 0" },
                                 })}
                             />
@@ -217,6 +219,26 @@ export default function FormEditArticle({ item }: Props) {
                         {errors.price ? (
                             <p className="text-sm text-error mt-1">
                                 {String(errors.price.message)}
+                            </p>
+                        ) : null}
+                    </div>
+                    <div className="form-control mt-3 md:col-span-2">
+                        <label className="label">
+                            <span className="label-text">Commentaire (Article)</span>
+                        </label>
+                        <textarea
+                            className={`textarea textarea-bordered w-full ${errors.articleComment ? "textarea-error" : ""}`}
+                            {...register("articleComment", {
+                                setValueAs: (v) =>
+                                    typeof v === "string" && v.trim().length > 0
+                                        ? v.trim()
+                                        : null,
+                            })}
+                            placeholder="Ajouter un commentaire..."
+                        />
+                        {errors.articleComment ? (
+                            <p className="text-sm text-error mt-1">
+                                {String(errors.articleComment.message)}
                             </p>
                         ) : null}
                     </div>

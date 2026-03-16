@@ -47,13 +47,11 @@ export default function Register() {
     });
 
     const onSubmit = async (data: RegisterFormValues) => {
-        console.log(data);
         try {
             const response = await apiClient.post("/auth/register", data, {
                 skipAuth: true,
                 skipAuthRefresh: true,
             });
-            console.log("Register Response:", response);
             if (response.status === 200 || response.status === 201) {
                 setErrorMessage(null);
                 // Rediriger vers la page de connexion ou une autre page appropriée

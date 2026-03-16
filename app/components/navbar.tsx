@@ -4,6 +4,7 @@ import {
     LogOut,
     NotebookPen,
     ShoppingBasket,
+    Settings,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
@@ -88,6 +89,7 @@ export default function Navbar() {
                     <button
                         className="btn btn-ghost normal-case text-xl"
                         onClick={() => navigate("/")}
+                        aria-label="Accueil"
                     >
                         NestBoard
                     </button>
@@ -100,6 +102,7 @@ export default function Navbar() {
                             <button
                                 onClick={() => navigate("/")}
                                 className="btn btn-ghost btn-circle"
+                                aria-label="Accueil"
                             >
                                 <House className="w-6 h-6" />
                             </button>
@@ -108,6 +111,7 @@ export default function Navbar() {
                             <button
                                 onClick={() => navigate("/shopping_home")}
                                 className="btn btn-ghost btn-circle"
+                                aria-label="Courses"
                             >
                                 <ShoppingBasket className="w-6 h-6" />
                             </button>
@@ -116,8 +120,18 @@ export default function Navbar() {
                             <button
                                 onClick={() => navigate("/task_home")}
                                 className="btn btn-ghost btn-circle"
+                                aria-label="Tâches"
                             >
                                 <NotebookPen className="w-6 h-6" />
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={() => navigate("/settings")}
+                                className="btn btn-ghost btn-circle"
+                                aria-label="Paramètres"
+                            >
+                                <Settings className="w-6 h-6" />
                             </button>
                         </li>
                     </ul>
