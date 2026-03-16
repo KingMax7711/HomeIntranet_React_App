@@ -492,7 +492,7 @@ export default function Settings() {
                     <div className="card bg-base-200 shadow">
                         <div className="card-body p-4 gap-4">
                             <h2 className="card-title text-lg">
-                                Autre actions de sécurité
+                                Autres actions de sécurité
                             </h2>
                             <div className="card-actions justify-between">
                                 <button

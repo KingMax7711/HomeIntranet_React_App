@@ -30,7 +30,7 @@ type FormValues = {
     quantity: number;
     inPromotion: boolean;
     needCoupons: boolean;
-    articleComment: string;
+    articleComment: string | null;
 };
 
 const normalize = (s: string) => s.trim().toLowerCase();
@@ -62,7 +62,7 @@ export default function FormAjoutArticle() {
         quantity: 1,
         inPromotion: false,
         needCoupons: false,
-        articleComment: "",
+        articleComment: null,
     };
 
     useEffect(() => {
@@ -127,7 +127,6 @@ export default function FormAjoutArticle() {
 
     const productQuery = watch("productQuery");
     const categoryName = watch("categoryName");
-    watch("defaultPrice");
 
     const bumpQuantity = (delta: number) => {
         const current = getValues("quantity");
@@ -135,16 +134,6 @@ export default function FormAjoutArticle() {
             typeof current === "number" && !Number.isNaN(current) ? current : 1;
         const next = Math.max(1, Math.trunc(safeCurrent + delta));
         setValue("quantity", next, { shouldDirty: true, shouldValidate: true });
-    };
-
-    const bumpDefaultPrice = (delta: number) => {
-        const current = getValues("defaultPrice");
-        const safeCurrent =
-            typeof current === "number" && !Number.isNaN(current) ? current : 0;
-        const nextRaw = safeCurrent + delta;
-        const nextRounded = Math.round(nextRaw * 100) / 100;
-        const next = Math.max(0, nextRounded);
-        setValue("defaultPrice", next, { shouldDirty: true, shouldValidate: true });
     };
 
     const filteredProducts = useMemo(() => {
