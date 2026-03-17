@@ -11,6 +11,8 @@ export default function ShoppingListPreparationItemCard({
     onDelete: (item: ShoppingListItemDetailed) => void;
 }) {
     const name = capitalizeFirstLetter(item.product?.name?.trim() || "Article");
+    const customSortIndex =
+        item.custom_sort_index !== null ? `${item.custom_sort_index + 1}` : "Non trié";
     const category = capitalizeFirstLetter(item.product?.category?.trim() || "—");
     const quantity = Number.isFinite(item.quantity) ? item.quantity : 0;
     const price = item.price;
@@ -26,6 +28,10 @@ export default function ShoppingListPreparationItemCard({
                         <div className="flex items-center gap-1">
                             <h3 className="font-semibold leading-tight truncate">
                                 {name}
+                                <span className="text-xs text-base-content/60">
+                                    {" • "}
+                                    {customSortIndex}
+                                </span>
                             </h3>
                             {in_promotion && (
                                 <span className="hidden md:inline-block badge badge-sm badge-success badge-outline ml-3">
