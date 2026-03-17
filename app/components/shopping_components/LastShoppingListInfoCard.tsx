@@ -133,6 +133,7 @@ export default function LastShoppingListInfoCard({
                     </div>
 
                     <button
+                        type="button"
                         className="btn btn-sm btn-outline mt-2 self-end"
                         onClick={() => navigate(`/shopping_history/all`)}
                     >

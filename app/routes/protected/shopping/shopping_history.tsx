@@ -11,7 +11,7 @@ import { apiClient } from "~/api/apiClient";
 import ShoppingHistoryRecapCard from "~/components/shopping_components/ShoppingHistoryRecapCard";
 import ShoppingHistoryDetailedItemCard, {
     type AddToListState,
-} from "../../../components/shopping_components/ShoppingHistoryDetailedItemCard";
+} from "~/components/shopping_components/ShoppingHistoryDetailedItemCard";
 import { useShoppingListStore } from "~/stores/shopping_list";
 import {
     capitalizeAllWords,
