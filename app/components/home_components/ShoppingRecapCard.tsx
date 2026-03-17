@@ -51,7 +51,7 @@ export default function ShoppingRecapCard({
     const statusBadgeClass = getStatusBadgeClass(shoppingRecap.status);
 
     return (
-        <div className="card bg-base-200 shadow">
+        <div className="card bg-base-200 shadow h-fit">
             <div className="card-body p-5 md:p-6 gap-5">
                 <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">

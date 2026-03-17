@@ -192,7 +192,7 @@ export default function Settings() {
     const roleLabel = user?.privileges === "owner" ? "Propriétaire" : "Utilisateur";
 
     return (
-        <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
+        <div className="mx-auto w-full max-w-7xl px-4 md:px-6 flex-1">
             <div className="grid md:grid-cols-3 gap-5">
                 <div className="md:col-span-1 flex flex-col gap-5">
                     <div className="card bg-base-200 shadow">
