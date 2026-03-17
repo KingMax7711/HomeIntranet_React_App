@@ -76,7 +76,7 @@ function SortableItemRow({ id, item, liveIndex }: SortableItemProps) {
                 <div className="flex items-center gap-3">
                     <button
                         type="button"
-                        className="btn btn-ghost min-h-11 min-w-11 cursor-grab p-0 text-lg active:cursor-grabbing md:btn-sm md:min-h-0 md:min-w-0"
+                        className="btn btn-ghost min-h-11 min-w-11 cursor-grab p-0 text-lg active:cursor-grabbing md:btn-sm"
                         aria-label="Déplacer"
                         style={{ touchAction: "none", WebkitTouchCallout: "none" }}
                         {...attributes}
