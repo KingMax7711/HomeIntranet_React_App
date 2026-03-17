@@ -26,6 +26,7 @@ import { useShoppingListStore } from "~/stores/shopping_list";
 import type { ShoppingListItemDetailed } from "~/stores/shopping_list";
 import { capitalizeFirstLetter, sortByCustomSortIndex } from "~/tools/formater";
 import { apiClient } from "~/api/apiClient";
+import { Ticket, BadgePercent } from "lucide-react";
 
 export function meta() {
     return [
@@ -37,9 +38,10 @@ export function meta() {
 type SortableItemProps = {
     id: number;
     item: ShoppingListItemDetailed;
+    liveIndex: number;
 };
 
-function SortableItemRow({ id, item }: SortableItemProps) {
+function SortableItemRow({ id, item, liveIndex }: SortableItemProps) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({ id });
 
@@ -58,6 +60,8 @@ function SortableItemRow({ id, item }: SortableItemProps) {
               : item.status === "not_found"
                 ? "Non trouvé"
                 : "Abandonné";
+    const inPromotion = item?.in_promotion ?? false;
+    const needCoupons = item?.need_coupons ?? false;
 
     return (
         <div
@@ -94,18 +98,13 @@ function SortableItemRow({ id, item }: SortableItemProps) {
                             <span>Qté: {qty}</span>
                             <span>•</span>
                             <span>{statusLabel}</span>
-                            {item.custom_sort_index === null ? (
-                                <>
-                                    <span>•</span>
-                                    <span>Non trié</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span>•</span>
-                                    <span>#{item.custom_sort_index + 1}</span>
-                                </>
-                            )}
+                            <span>•</span>
+                            <span>#{liveIndex + 1}</span>
                         </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        {inPromotion && <BadgePercent className="text-green-500" />}
+                        {needCoupons && <Ticket className="text-blue-500" />}
                     </div>
                 </div>
             </div>
@@ -349,8 +348,13 @@ export default function ShoppingSort() {
                         strategy={verticalListSortingStrategy}
                     >
                         <div className="flex flex-col gap-3">
-                            {orderedItems.map((item) => (
-                                <SortableItemRow key={item.id} id={item.id} item={item} />
+                            {orderedItems.map((item, index) => (
+                                <SortableItemRow
+                                    key={item.id}
+                                    id={item.id}
+                                    item={item}
+                                    liveIndex={index}
+                                />
                             ))}
                         </div>
                     </SortableContext>
