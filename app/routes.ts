@@ -18,6 +18,10 @@ export default [
                 "routes/protected/shopping/shopping_productsRecurrences.tsx",
             ),
             route("shopping_category", "routes/protected/shopping/shopping_category.tsx"),
+            route(
+                "shopping_history/:id",
+                "routes/protected/shopping/shopping_history.tsx",
+            ),
         ]),
     ]),
     layout("routes/auth/layout.tsx", [
