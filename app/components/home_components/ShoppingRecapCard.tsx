@@ -34,7 +34,7 @@ export default function ShoppingRecapCard({
 }) {
     if (!shoppingRecap) {
         return (
-            <div className="card bg-base-200 shadow">
+            <div className="card bg-base-200 shadow h-fit">
                 <div className="card-body p-5 md:p-6">
                     <p className="opacity-70 text-center">
                         Aucun récapitulatif de liste de courses disponible.

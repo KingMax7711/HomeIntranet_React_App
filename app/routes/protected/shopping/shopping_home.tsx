@@ -265,7 +265,7 @@ export default function ShoppingHome() {
         );
 
     return (
-        <div className="p-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
+        <div className="py-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-6 md:col-span-1">
                     <ShoppingListInfo

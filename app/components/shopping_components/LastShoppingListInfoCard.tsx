@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router";
 import type { ShoppingListView } from "~/stores/shopping_list";
 import {
     capitalizeAllWords,
@@ -61,6 +62,8 @@ export default function LastShoppingListInfoCard({
         if (typeof apiTotal === "number" && Number.isFinite(apiTotal)) return apiTotal;
         return computeTotalFromItems(view);
     }, [view]);
+
+    const navigate = useNavigate();
 
     if (!view) {
         return (
@@ -128,6 +131,14 @@ export default function LastShoppingListInfoCard({
                             {formatCurrencyEUR(total)}
                         </span>
                     </div>
+
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-outline mt-2 self-end"
+                        onClick={() => navigate(`/shopping_history/all`)}
+                    >
+                        Voir l'historique
+                    </button>
                 </div>
             </div>
         </div>
