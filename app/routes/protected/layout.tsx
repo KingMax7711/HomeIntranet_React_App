@@ -1,6 +1,7 @@
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { useEffect, useRef } from "react";
 import Navbar from "~/components/navbar";
+import Footer from "~/components/footer";
 
 import { useAuthStore } from "../../stores/auth";
 
@@ -10,6 +11,7 @@ export default function ProtectedLayout() {
             <RequireAuth>
                 <Navbar />
                 <Outlet />
+                <Footer />
             </RequireAuth>
         </div>
     );
