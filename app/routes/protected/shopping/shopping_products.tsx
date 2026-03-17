@@ -180,7 +180,7 @@ export default function ShoppingProducts() {
     return (
         <div className="pt-4 md:px-4 md:max-w-3/4 xxl:max-w-2/3 mx-auto">
             <div className="card bg-base-300 shadow-xl">
-                <div className="card-body gap-4">
+                <div className="card-body gap-1">
                     <div className="flex items-center justify-between gap-3">
                         <h2 className="card-title">Catalogue de produits</h2>
 
@@ -212,7 +212,11 @@ export default function ShoppingProducts() {
                             />
                         </div>
                     </div>
-                    <div className="divider my-0" />
+                    <div className="divider">
+                        {capitalizeFirstLetter(
+                            filteredProducts[0]?.category || "Sans catégorie",
+                        )}
+                    </div>
 
                     {status === "loading" ? (
                         <p className="text-sm opacity-70 flex items-center gap-2">
@@ -248,7 +252,7 @@ export default function ShoppingProducts() {
                                             {capitalizeFirstLetter(
                                                 filteredProducts[
                                                     filteredProducts.indexOf(p) + 1
-                                                ]?.category || "",
+                                                ]?.category || "Sans catégorie",
                                             )}{" "}
                                         </div>
                                     )}
