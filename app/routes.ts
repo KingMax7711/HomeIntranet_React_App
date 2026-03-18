@@ -22,6 +22,7 @@ export default [
                 "shopping_history/:id",
                 "routes/protected/shopping/shopping_history.tsx",
             ),
+            route("shopping_import", "routes/protected/shopping/shopping_import.tsx"),
         ]),
     ]),
     layout("routes/auth/layout.tsx", [
