@@ -721,9 +721,7 @@ export default function ShoppingImport() {
                     </div>
 
                     <div className="w-full flex flex-col gap-6 md:w-3/5">
-                        {importedItems.map((item, index) => {
-                            const isLast = index === importedItems.length - 1;
-
+                        {importedItems.map((item) => {
                             return (
                                 <ImportedProductCard
                                     key={item.id}
