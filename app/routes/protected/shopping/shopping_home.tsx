@@ -314,7 +314,16 @@ export default function ShoppingHome() {
                             </div>
                         )}
                         <div className="divider mt-4"></div>
-                        <div className="flex justify-end">
+                        <div className="flex justify-end gap-4">
+                            <button
+                                type="button"
+                                className="btn btn-neutral btn-outline"
+                                onClick={() => {
+                                    navigate("/shopping_import");
+                                }}
+                            >
+                                Importer
+                            </button>
                             <button
                                 type="button"
                                 className="btn btn-neutral btn-soft"
