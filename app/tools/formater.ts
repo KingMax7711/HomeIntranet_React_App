@@ -59,7 +59,7 @@ export function sortByCustomSortIndex<T extends { custom_sort_index?: number | n
         const idx =
             typeof raw === "number" && Number.isFinite(raw)
                 ? raw
-                : Number.POSITIVE_INFINITY;
+                : Number.NEGATIVE_INFINITY;
         return { item, idx, originalPosition };
     });
 
