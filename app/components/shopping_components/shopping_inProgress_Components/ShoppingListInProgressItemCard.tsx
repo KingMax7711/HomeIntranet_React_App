@@ -69,6 +69,11 @@ export default function ShoppingListInProgressItemCard({
     const need_coupons = item.need_coupons;
     const status = item.status ?? "pending";
     const affectedUserId = item.affected_user?.id;
+    const added_by_user = capitalizeAllWords(
+        item.added_by_user
+            ? `${item.added_by_user.first_name} ${item.added_by_user.last_name.slice(0, 1)}.`
+            : "—",
+    );
     const meta = statusMeta(status);
 
     return (
@@ -82,6 +87,7 @@ export default function ShoppingListInProgressItemCard({
                             {name}
                         </h3>
                         <p className="text-sm opacity-80 truncate">{category}</p>
+                        <p className="text-xs opacity-50">Ajouté par : {added_by_user}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2 shrink-0">
                         <span className={meta.badgeClass}>{meta.badgeLabel}</span>
@@ -173,8 +179,12 @@ export default function ShoppingListInProgressItemCard({
                         </span>
                     </div>
                     <div className="flex items-center justify-start gap-3 col-span-2 lg:col-span-3">
-                        <span className="text-sm opacity-70">Commentaire</span>
-                        <span className="font-medium truncate">{comment || "—"}</span>
+                        <span className="text-sm opacity-70 self-start md:self-center">
+                            Commentaire
+                        </span>
+                        <span className="font-medium whitespace-pre-line md:whitespace-normal">
+                            {comment || "—"}
+                        </span>
                     </div>
                 </div>
 

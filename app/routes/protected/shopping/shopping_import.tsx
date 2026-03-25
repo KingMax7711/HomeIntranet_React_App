@@ -55,7 +55,12 @@ const endpointRegisterArticle = "/shopping_list_globals/register_article";
 const MAX_IMPORT_CHARACTERS = 20000;
 const MAX_IMPORT_ITEMS = 200;
 
-const normalize = (value: string) => value.trim().toLowerCase();
+const normalize = (value: string) =>
+    value
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
 const safeTrim = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 
 const normalizeForMatch = (value: string) => {

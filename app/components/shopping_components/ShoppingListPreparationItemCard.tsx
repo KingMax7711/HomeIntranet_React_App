@@ -1,5 +1,9 @@
 import type { ShoppingListItemDetailed } from "~/stores/shopping_list";
-import { capitalizeFirstLetter, formatCurrencyEUR } from "~/tools/formater";
+import {
+    capitalizeAllWords,
+    capitalizeFirstLetter,
+    formatCurrencyEUR,
+} from "~/tools/formater";
 
 export default function ShoppingListPreparationItemCard({
     item,
@@ -19,6 +23,11 @@ export default function ShoppingListPreparationItemCard({
     const comment = item.product?.comment?.trim() || "";
     const in_promotion = item.in_promotion;
     const need_coupons = item.need_coupons;
+    const added_by_user = capitalizeAllWords(
+        item.added_by_user
+            ? `${item.added_by_user.first_name} ${item.added_by_user.last_name.slice(0, 1)}.`
+            : "—",
+    );
 
     return (
         <div className={`card bg-base-100 shadow`}>
@@ -45,6 +54,7 @@ export default function ShoppingListPreparationItemCard({
                             )}
                         </div>
                         <p className="text-sm opacity-70 truncate">{category}</p>
+                        <p className="text-xs opacity-50">Ajouté par : {added_by_user}</p>
                     </div>
                     <div className="flex flex-col md:flex-row md:items-center gap-2 shrink-0">
                         <button
@@ -78,8 +88,12 @@ export default function ShoppingListPreparationItemCard({
                         </span>
                     </div>
                     <div className="flex items-center justify-start gap-3 col-span-2 md:col-span-3">
-                        <span className="text-sm opacity-70">Commentaire</span>
-                        <span className="font-medium truncate">{comment || "—"}</span>
+                        <span className="text-sm opacity-70 self-start md:self-center">
+                            Commentaire
+                        </span>
+                        <span className="font-medium whitespace-pre-line md:whitespace-normal">
+                            {comment || "—"}
+                        </span>
                     </div>
                     {in_promotion && (
                         <div className="md:hidden flex items-center justify-start gap-3 col-span-full">

@@ -33,7 +33,12 @@ type FormValues = {
     articleComment: string | null;
 };
 
-const normalize = (s: string) => s.trim().toLowerCase();
+const normalize = (s: string) =>
+    s
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
 const safeTrim = (s: unknown) => (typeof s === "string" ? s.trim() : "");
 
 const endpointAllProducts = "/shopping_list_globals/all_products_lite";
@@ -51,6 +56,11 @@ export default function FormAjoutArticle() {
     const [productMenuOpen, setProductMenuOpen] = useState(false);
     const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+
+    const selectedProductAlreadyInList = useMemo(() => {
+        if (!selectedProduct || !shoppingList || !shoppingList.items) return false;
+        return shoppingList.items.some((item) => item.product?.id === selectedProduct.id);
+    }, [selectedProduct, shoppingList]);
 
     const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -375,6 +385,13 @@ export default function FormAjoutArticle() {
                             </div>
                             <span className={productBadgeClass}>{productBadgeLabel}</span>
                         </div>
+                        {selectedProductAlreadyInList && (
+                            <div className="mt-2">
+                                <span className="text-sm text-warning italic">
+                                    Ce produit est déjà dans la liste.
+                                </span>
+                            </div>
+                        )}
 
                         <div className="divider my-3" />
 
