@@ -54,7 +54,7 @@ export default function ShoppingListPreparationItemCard({
                             )}
                         </div>
                         <p className="text-sm opacity-70 truncate">{category}</p>
-                        <p className="text-xs opacity-50">Ajouté par: {added_by_user}</p>
+                        <p className="text-xs opacity-50">Ajouté par : {added_by_user}</p>
                     </div>
                     <div className="flex flex-col md:flex-row md:items-center gap-2 shrink-0">
                         <button
