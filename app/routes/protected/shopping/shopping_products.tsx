@@ -248,12 +248,13 @@ export default function ShoppingProducts() {
                                         filteredProducts[filteredProducts.indexOf(p) + 1]
                                             ?.category && (
                                         <div className="divider my-0">
-                                            {" "}
+                                            {""}
                                             {capitalizeFirstLetter(
                                                 filteredProducts[
                                                     filteredProducts.indexOf(p) + 1
-                                                ]?.category || "Sans catégorie",
-                                            )}{" "}
+                                                ]?.category || "",
+                                            )}
+                                            {""}
                                         </div>
                                     )}
                                 </>
