@@ -78,8 +78,12 @@ export default function ShoppingListPreparationItemCard({
                         </span>
                     </div>
                     <div className="flex items-center justify-start gap-3 col-span-2 md:col-span-3">
-                        <span className="text-sm opacity-70">Commentaire</span>
-                        <span className="font-medium truncate">{comment || "—"}</span>
+                        <span className="text-sm opacity-70 self-start md:self-center">
+                            Commentaire
+                        </span>
+                        <span className="font-medium whitespace-pre-line md:whitespace-normal">
+                            {comment || "—"}
+                        </span>
                     </div>
                     {in_promotion && (
                         <div className="md:hidden flex items-center justify-start gap-3 col-span-full">
