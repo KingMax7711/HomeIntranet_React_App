@@ -18,7 +18,12 @@ type CategoryLite = {
     name: string;
 };
 
-const normalize = (value: string) => value.trim().toLowerCase();
+const normalize = (value: string) =>
+    value
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
 const safeTrim = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 
 export type ImportedItemView = {

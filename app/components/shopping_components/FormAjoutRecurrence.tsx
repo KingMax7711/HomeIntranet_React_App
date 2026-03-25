@@ -14,7 +14,12 @@ type FormValues = {
     productQuery: string;
 };
 
-const normalize = (s: string) => s.trim().toLowerCase();
+const normalize = (s: string) =>
+    s
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
 const safeTrim = (s: unknown) => (typeof s === "string" ? s.trim() : "");
 
 export default function FormAjoutRecurrence({
