@@ -389,7 +389,7 @@ export default function FormAjoutArticle() {
                             <div className="mt-2">
                                 <span className="text-sm text-warning italic">
                                     Ce produit est déjà dans la liste.{" "}
-                                    <button className="link" onClick={closeDialog}>
+                                    <button type="button" className="link" onClick={closeDialog}>
                                         Annuler ?
                                     </button>
                                 </span>
