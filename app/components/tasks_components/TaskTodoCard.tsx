@@ -25,7 +25,7 @@ export default function TaskTodoCard() {
                             TODO
                         </p>
                         <p className="leading-relaxed opacity-80">
-                            Cette card affichera bientôt un aperçu des tâches à faire :
+                            Cette carte affichera bientôt un aperçu des tâches à faire :
                             priorités du jour, répartition entre les membres et suivi des
                             éléments terminés.
                         </p>
