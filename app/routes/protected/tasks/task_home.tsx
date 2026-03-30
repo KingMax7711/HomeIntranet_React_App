@@ -3,7 +3,7 @@ import TaskTodoCard from "~/components/tasks_components/TaskTodoCard";
 export function meta() {
     return [
         {
-            title: "Tâches - NestBoard",
+            title: "NestBoard - Tâches",
         },
     ];
 }
