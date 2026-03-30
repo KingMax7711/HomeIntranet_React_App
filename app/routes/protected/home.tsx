@@ -52,7 +52,7 @@ export default function Home() {
         } else {
             setLocalShoppingRecap(null);
         }
-    }, [user]);
+    }, [user, user?.house_id]);
 
     const handleJoinHouse = async () => {
         if (isHouseActionLoading) return;
