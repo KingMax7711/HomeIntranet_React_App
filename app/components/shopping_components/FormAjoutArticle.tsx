@@ -388,7 +388,10 @@ export default function FormAjoutArticle() {
                         {selectedProductAlreadyInList && (
                             <div className="mt-2">
                                 <span className="text-sm text-warning italic">
-                                    Ce produit est déjà dans la liste.
+                                    Ce produit est déjà dans la liste.{" "}
+                                    <button type="button" className="link" onClick={closeDialog}>
+                                        Annuler ?
+                                    </button>
                                 </span>
                             </div>
                         )}

@@ -254,6 +254,7 @@ export default function Settings() {
                                     <input
                                         type="text"
                                         className="input input-bordered w-full"
+                                        autoComplete="given-name"
                                         placeholder="Votre prénom"
                                         minLength={2}
                                         value={firstName}
@@ -275,6 +276,7 @@ export default function Settings() {
                                     <input
                                         type="text"
                                         className="input input-bordered w-full"
+                                        autoComplete="family-name"
                                         placeholder="Votre nom"
                                         minLength={2}
                                         value={lastName}

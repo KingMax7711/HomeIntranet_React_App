@@ -285,14 +285,26 @@ export default function ShoppingHome() {
                     <div className="card-body gap-4">
                         <div className="flex items-center justify-between gap-3">
                             <h2 className="card-title">Articles</h2>
-                            <button
-                                type="button"
-                                className="btn btn-primary btn-sm"
-                                disabled={!shoppingList}
-                                onClick={handleOpenAdd}
-                            >
-                                Ajouter un article
-                            </button>
+                            <div className="flex gap-2 flex-row">
+                                <button
+                                    type="button"
+                                    className="btn btn-neutral btn-soft btn-sm"
+                                    disabled={items.length < 2}
+                                    onClick={() => {
+                                        navigate("/shopping_sort");
+                                    }}
+                                >
+                                    Trier la liste
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary btn-sm"
+                                    disabled={!shoppingList}
+                                    onClick={handleOpenAdd}
+                                >
+                                    Ajouter un article
+                                </button>
+                            </div>
                         </div>
 
                         <div className="divider my-0" />
@@ -323,16 +335,6 @@ export default function ShoppingHome() {
                                 }}
                             >
                                 Importer
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-neutral btn-soft"
-                                disabled={items.length < 2}
-                                onClick={() => {
-                                    navigate("/shopping_sort");
-                                }}
-                            >
-                                Trier la liste
                             </button>
                         </div>
                     </div>

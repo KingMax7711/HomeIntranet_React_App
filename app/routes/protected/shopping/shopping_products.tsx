@@ -201,7 +201,7 @@ export default function ShoppingProducts() {
                         </button>
                     </div>
 
-                    <div className="w-full md:hidden">
+                    <div className="w-full md:hidden mt-3">
                         <div className="form-control flex-1">
                             <input
                                 type="search"
