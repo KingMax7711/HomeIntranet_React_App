@@ -27,6 +27,9 @@ export default [
         layout("routes/protected/tasks/layout.tsx", [
             route("task_home", "routes/protected/tasks/task_home.tsx"),
         ]),
+        layout("routes/protected/fridge/layout.tsx", [
+            route("fridge_home", "routes/protected/fridge/fridge_home.tsx"),
+        ]),
     ]),
     layout("routes/auth/layout.tsx", [
         route("login", "routes/auth/login.tsx"),

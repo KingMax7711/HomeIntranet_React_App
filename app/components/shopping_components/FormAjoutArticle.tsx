@@ -27,6 +27,7 @@ type FormValues = {
     categoryName: string;
     defaultPrice?: number | null;
     comment: string;
+    fridgeProduct: boolean;
     quantity: number;
     inPromotion: boolean;
     needCoupons: boolean;
@@ -69,6 +70,7 @@ export default function FormAjoutArticle() {
         categoryName: "",
         defaultPrice: null,
         comment: "",
+        fridgeProduct: false,
         quantity: 1,
         inPromotion: false,
         needCoupons: false,
@@ -202,6 +204,7 @@ export default function FormAjoutArticle() {
             : {
                   name,
                   category_id: categoryPayload,
+                  fridge_product: !!values.fridgeProduct,
                   default_price:
                       typeof values.defaultPrice === "number" &&
                       !Number.isNaN(values.defaultPrice)
@@ -276,6 +279,7 @@ export default function FormAjoutArticle() {
                                     resetField("categoryName");
                                     resetField("defaultPrice");
                                     resetField("comment");
+                                    resetField("fridgeProduct");
                                     resetField("articleComment");
                                     setCategoryMenuOpen(false);
                                 }}
@@ -389,7 +393,11 @@ export default function FormAjoutArticle() {
                             <div className="mt-2">
                                 <span className="text-sm text-warning italic">
                                     Ce produit est déjà dans la liste.{" "}
-                                    <button type="button" className="link" onClick={closeDialog}>
+                                    <button
+                                        type="button"
+                                        className="link"
+                                        onClick={closeDialog}
+                                    >
                                         Annuler ?
                                     </button>
                                 </span>
@@ -555,6 +563,19 @@ export default function FormAjoutArticle() {
                                         placeholder=""
                                         {...register("comment")}
                                     />
+                                </div>
+
+                                <div className="form-control md:col-span-2 mt-1">
+                                    <label className="label cursor-pointer justify-start gap-3">
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox"
+                                            {...register("fridgeProduct")}
+                                        />
+                                        <span className="label-text">
+                                            Produit a conserver au frigo ?
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
                         )}

@@ -1,5 +1,6 @@
 import type { ShoppingListItemDetailed } from "~/stores/shopping_list";
 import type { User } from "~/types/domain";
+import { Refrigerator } from "lucide-react";
 import {
     capitalizeAllWords,
     capitalizeFirstLetter,
@@ -61,6 +62,9 @@ export default function ShoppingListInProgressItemCard({
     ) => void;
 }) {
     const name = capitalizeFirstLetter(item.product?.name?.trim() || "Article");
+    const fridge = item.product?.fridge_product ? (
+        <Refrigerator className="w-4 h-4 text-blue-500" />
+    ) : null;
     const category = capitalizeFirstLetter(item.product?.category?.trim() || "—");
     const quantity = Number.isFinite(item.quantity) ? item.quantity : 0;
     const price = item.price;
@@ -83,7 +87,8 @@ export default function ShoppingListInProgressItemCard({
             <div className={`px-5 py-4 sm:px-5 sm:py-3 ${meta.headerClass}`}>
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                        <h3 className="font-semibold leading-tight truncate text-lg sm:text-base md:text-lg">
+                        <h3 className="font-semibold leading-tight truncate text-lg sm:text-base md:text-lg flex items-center gap-1">
+                            {fridge}
                             {name}
                         </h3>
                         <p className="text-sm opacity-80 truncate">{category}</p>

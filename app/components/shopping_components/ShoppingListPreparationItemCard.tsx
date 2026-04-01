@@ -1,4 +1,5 @@
 import type { ShoppingListItemDetailed } from "~/stores/shopping_list";
+import { Refrigerator } from "lucide-react";
 import {
     capitalizeAllWords,
     capitalizeFirstLetter,
@@ -15,6 +16,9 @@ export default function ShoppingListPreparationItemCard({
     onDelete: (item: ShoppingListItemDetailed) => void;
 }) {
     const name = capitalizeFirstLetter(item.product?.name?.trim() || "Article");
+    const fridge = item.product?.fridge_product ? (
+        <Refrigerator className="inline-block w-4 h-4 text-blue-500 mr-1" />
+    ) : null;
     const customSortIndex =
         item.custom_sort_index !== null ? `${item.custom_sort_index + 1}` : "Non trié";
     const category = capitalizeFirstLetter(item.product?.category?.trim() || "—");
@@ -36,6 +40,7 @@ export default function ShoppingListPreparationItemCard({
                     <div className="min-w-0">
                         <div className="flex items-center gap-1">
                             <h3 className="font-semibold leading-tight truncate">
+                                {fridge}
                                 {name}
                                 <span className="text-xs text-base-content/60">
                                     {" • "}

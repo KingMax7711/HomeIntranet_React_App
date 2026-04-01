@@ -1,4 +1,5 @@
 import { capitalizeFirstLetter, formatCurrencyEUR } from "~/tools/formater";
+import { Refrigerator } from "lucide-react";
 
 export type ProductCatalogItem = {
     id: number;
@@ -7,6 +8,7 @@ export type ProductCatalogItem = {
     comment?: string | null;
     category?: string | null;
     category_id?: unknown;
+    fridge_product: boolean;
 };
 
 export type Category = {
@@ -51,6 +53,9 @@ export default function ProductCard({
     const name = capitalizeFirstLetter(product.name?.trim() || "Produit");
     const category = capitalizeFirstLetter(categoryLabelFromProduct(product));
     const comment = (product.comment ?? "").trim();
+    const fridge = product.fridge_product ? (
+        <Refrigerator className="w-4 h-4 text-blue-500" />
+    ) : null;
 
     const hasDefaultPrice =
         typeof product.default_price === "number" &&
@@ -66,7 +71,8 @@ export default function ProductCard({
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                         <div className="flex items-center gap-2 min-w-0">
-                            <h3 className="font-semibold leading-tight truncate">
+                            <h3 className="font-semibold leading-tight truncate flex items-center gap-1">
+                                {fridge}
                                 {name}
                             </h3>
                             <span className="hidden md:block badge badge-ghost badge-outline badge-sm opacity-70 shrink-0">

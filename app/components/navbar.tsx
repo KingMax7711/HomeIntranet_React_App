@@ -5,6 +5,7 @@ import {
     NotebookPen,
     ShoppingBasket,
     Settings,
+    Refrigerator,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
@@ -13,6 +14,7 @@ import { apiClient } from "~/api/apiClient";
 import { useAuthStore } from "~/stores/auth";
 import type { User } from "~/types/domain";
 import { capitalizeAllWords } from "~/tools/formater";
+import logo from "../resources/logo.ico";
 
 type HouseDetailed = {
     id: number;
@@ -87,11 +89,18 @@ export default function Navbar() {
             <div className="navbar-start">
                 <div className="">
                     <button
-                        className="btn btn-ghost normal-case text-xl"
+                        className="btn btn-ghost normal-case text-xl hidden sm:block"
                         onClick={() => navigate("/")}
                         aria-label="Accueil"
                     >
                         NestBoard
+                    </button>
+                    <button
+                        className="sm:hidden"
+                        onClick={() => navigate("/")}
+                        aria-label="Accueil"
+                    >
+                        <img src={logo} alt="Logo" className="w-11 h-11" />
                     </button>
                 </div>
             </div>
@@ -114,6 +123,15 @@ export default function Navbar() {
                                 aria-label="Courses"
                             >
                                 <ShoppingBasket className="w-6 h-6" />
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={() => navigate("/fridge_home")}
+                                className="btn btn-ghost btn-circle"
+                                aria-label="Frigo"
+                            >
+                                <Refrigerator className="w-6 h-6" />
                             </button>
                         </li>
                         <li>
