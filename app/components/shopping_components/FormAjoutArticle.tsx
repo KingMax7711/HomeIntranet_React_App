@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useShoppingListStore } from "~/stores/shopping_list";
+import { normalizeSearchText, smartNameSearch } from "~/tools/catalogSearch";
 import {
     capitalizeFirstLetter,
     capitalizeAllWords,
@@ -34,12 +35,7 @@ type FormValues = {
     articleComment: string | null;
 };
 
-const normalize = (s: string) =>
-    s
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+const normalize = normalizeSearchText;
 const safeTrim = (s: unknown) => (typeof s === "string" ? s.trim() : "");
 
 const endpointAllProducts = "/shopping_list_globals/all_products_lite";
@@ -149,19 +145,17 @@ export default function FormAjoutArticle() {
     };
 
     const filteredProducts = useMemo(() => {
-        const q = normalize(productQuery ?? "");
-        if (!q) return [];
-        const list = products.filter((p) => normalize(p.name).includes(q));
-        list.sort((a, b) => a.name.localeCompare(b.name));
-        return list.slice(0, 8);
+        return smartNameSearch(products, productQuery ?? "", {
+            limit: 10,
+            minScore: 0.32,
+        });
     }, [products, productQuery]);
 
     const filteredCategories = useMemo(() => {
-        const q = normalize(categoryName ?? "");
-        if (!q) return [];
-        const list = categories.filter((c) => normalize(c.name).includes(q));
-        list.sort((a, b) => a.name.localeCompare(b.name));
-        return list.slice(0, 8);
+        return smartNameSearch(categories, categoryName ?? "", {
+            limit: 10,
+            minScore: 0.32,
+        });
     }, [categories, categoryName]);
 
     const closeDialog = () => {
