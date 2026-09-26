@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ShoppingListView } from "~/stores/shopping_list";
 import {
     formatDateTime,
@@ -75,6 +75,15 @@ export default function ShoppingListInfo({
     mallsList: { id: number; name: string; location?: string | null }[];
     onMallChange: (mallId: number | null) => void;
 }) {
+    const confirmDialogRef = useRef<HTMLDialogElement>(null);
+    const [confirmCountdown, setConfirmCountdown] = useState(0);
+
+    useEffect(() => {
+        if (confirmCountdown <= 0) return;
+        const timer = setTimeout(() => setConfirmCountdown((s) => s - 1), 1000);
+        return () => clearTimeout(timer);
+    }, [confirmCountdown]);
+
     const computedTotal = useMemo(() => {
         if (!view) return 0;
         const apiTotal = (view as ShoppingListView & { total?: number | null }).total;
@@ -230,13 +239,48 @@ export default function ShoppingListInfo({
                         type="button"
                         className="btn btn-primary w-full"
                         onClick={() => {
-                            onStartShopping();
+                            setConfirmCountdown(3);
+                            confirmDialogRef.current?.showModal();
                         }}
                     >
                         Démarrer les courses
                     </button>
                 </div>
             </div>
+
+            <dialog ref={confirmDialogRef} className="modal" tabIndex={-1}>
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Démarrer les courses ?</h3>
+                    <p className="py-4 text-sm opacity-80">
+                        Êtes vous sûr de vouloir démarrer les courses ? Cette action
+                        mettra la liste au statut "En cours" et ne pourra plus être
+                        annulée.
+                    </p>
+                    <div className="modal-action">
+                        <form method="dialog" className="flex gap-2 w-full">
+                            <button type="submit" className="btn flex-1">
+                                Annuler
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-primary flex-1"
+                                disabled={confirmCountdown > 0}
+                                onClick={() => {
+                                    confirmDialogRef.current?.close();
+                                    onStartShopping();
+                                }}
+                            >
+                                {confirmCountdown > 0
+                                    ? `Confirmer (${confirmCountdown}s)`
+                                    : "Confirmer"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
         </div>
     );
 }
