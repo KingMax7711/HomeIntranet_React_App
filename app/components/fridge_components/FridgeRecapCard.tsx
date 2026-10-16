@@ -122,9 +122,12 @@ export default function FridgeRecapCard({
                                 {fridgeRecap.fridge_name}
                             </h2>
                             {fridgeRecap.fridge_main ? (
-                                <span className="badge badge-primary badge-soft badge-sm shrink-0">
-                                    Principal
-                                </span>
+                                <>
+                                    <span className="badge badge-primary badge-soft badge-sm shrink-0 hidden md:block">
+                                        Principal
+                                    </span>
+                                    <span className="status status-primary  status-lg shrink-0 md:hidden"></span>
+                                </>
                             ) : null}
                         </div>
 

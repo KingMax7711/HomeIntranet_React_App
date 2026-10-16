@@ -158,7 +158,8 @@ export default function FridgeHome() {
         return normalizeFridgeItems(response.data);
     };
 
-    const refreshFridgeRecap = async (fridgeId: number) => {
+    const refreshFridgeRecap = async (fridgeId: number | undefined) => {
+        if (fridgeId == undefined) return;
         const products = await loadFridgeProducts(fridgeId);
 
         setFridgeRecaps((current) =>
@@ -319,6 +320,11 @@ export default function FridgeHome() {
                 : "Une erreur est survenue pendant la mise à jour.";
             console.error("Failed to update fridge item", error);
             throw new Error(String(message));
+        }
+
+        const fridgeId = selectedEditContext?.fridgeId;
+        if (fridgeId !== undefined) {
+            refreshFridgeRecap(fridgeId);
         }
     };
 
