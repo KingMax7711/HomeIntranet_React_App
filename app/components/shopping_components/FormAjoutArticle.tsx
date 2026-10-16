@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useShoppingListStore } from "~/stores/shopping_list";
+import { normalizeSearchText, smartNameSearch } from "~/tools/catalogSearch";
 import {
     capitalizeFirstLetter,
     capitalizeAllWords,
@@ -27,18 +28,14 @@ type FormValues = {
     categoryName: string;
     defaultPrice?: number | null;
     comment: string;
+    fridgeProduct: boolean;
     quantity: number;
     inPromotion: boolean;
     needCoupons: boolean;
     articleComment: string | null;
 };
 
-const normalize = (s: string) =>
-    s
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+const normalize = normalizeSearchText;
 const safeTrim = (s: unknown) => (typeof s === "string" ? s.trim() : "");
 
 const endpointAllProducts = "/shopping_list_globals/all_products_lite";
@@ -69,6 +66,7 @@ export default function FormAjoutArticle() {
         categoryName: "",
         defaultPrice: null,
         comment: "",
+        fridgeProduct: false,
         quantity: 1,
         inPromotion: false,
         needCoupons: false,
@@ -147,19 +145,17 @@ export default function FormAjoutArticle() {
     };
 
     const filteredProducts = useMemo(() => {
-        const q = normalize(productQuery ?? "");
-        if (!q) return [];
-        const list = products.filter((p) => normalize(p.name).includes(q));
-        list.sort((a, b) => a.name.localeCompare(b.name));
-        return list.slice(0, 8);
+        return smartNameSearch(products, productQuery ?? "", {
+            limit: 10,
+            minScore: 0.32,
+        });
     }, [products, productQuery]);
 
     const filteredCategories = useMemo(() => {
-        const q = normalize(categoryName ?? "");
-        if (!q) return [];
-        const list = categories.filter((c) => normalize(c.name).includes(q));
-        list.sort((a, b) => a.name.localeCompare(b.name));
-        return list.slice(0, 8);
+        return smartNameSearch(categories, categoryName ?? "", {
+            limit: 10,
+            minScore: 0.32,
+        });
     }, [categories, categoryName]);
 
     const closeDialog = () => {
@@ -202,6 +198,7 @@ export default function FormAjoutArticle() {
             : {
                   name,
                   category_id: categoryPayload,
+                  fridge_product: !!values.fridgeProduct,
                   default_price:
                       typeof values.defaultPrice === "number" &&
                       !Number.isNaN(values.defaultPrice)
@@ -276,6 +273,7 @@ export default function FormAjoutArticle() {
                                     resetField("categoryName");
                                     resetField("defaultPrice");
                                     resetField("comment");
+                                    resetField("fridgeProduct");
                                     resetField("articleComment");
                                     setCategoryMenuOpen(false);
                                 }}
@@ -389,7 +387,11 @@ export default function FormAjoutArticle() {
                             <div className="mt-2">
                                 <span className="text-sm text-warning italic">
                                     Ce produit est déjà dans la liste.{" "}
-                                    <button type="button" className="link" onClick={closeDialog}>
+                                    <button
+                                        type="button"
+                                        className="link"
+                                        onClick={closeDialog}
+                                    >
                                         Annuler ?
                                     </button>
                                 </span>
@@ -555,6 +557,19 @@ export default function FormAjoutArticle() {
                                         placeholder=""
                                         {...register("comment")}
                                     />
+                                </div>
+
+                                <div className="form-control md:col-span-2 mt-1">
+                                    <label className="label cursor-pointer justify-start gap-3">
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox"
+                                            {...register("fridgeProduct")}
+                                        />
+                                        <span className="label-text">
+                                            Produit a conserver au frigo ?
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
                         )}

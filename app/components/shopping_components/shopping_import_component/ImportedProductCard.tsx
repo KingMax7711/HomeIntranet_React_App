@@ -11,6 +11,7 @@ type ProductLite = {
     default_price?: number | null;
     comment?: string | null;
     category?: string | null;
+    fridge_product?: boolean;
 };
 
 type CategoryLite = {
@@ -40,6 +41,7 @@ export type ImportedItemView = {
         categoryName: string;
         defaultPrice: string;
         comment: string;
+        fridgeProduct: boolean;
         quantity: number;
         articleComment: string;
         inPromotion: boolean;
@@ -57,6 +59,7 @@ export default function ImportedProductCard({
     onCategoryChange,
     onDefaultPriceChange,
     onCommentChange,
+    onFridgeProductChange,
     onQuantityChange,
     onArticleCommentChange,
     onInPromotionChange,
@@ -76,6 +79,7 @@ export default function ImportedProductCard({
     onCategoryChange: (value: string) => void;
     onDefaultPriceChange: (value: string) => void;
     onCommentChange: (value: string) => void;
+    onFridgeProductChange: (checked: boolean) => void;
     onQuantityChange: (value: number) => void;
     onArticleCommentChange: (value: string) => void;
     onInPromotionChange: (checked: boolean) => void;
@@ -443,6 +447,25 @@ export default function ImportedProductCard({
                                                 onCommentChange(event.target.value)
                                             }
                                         />
+                                    </div>
+
+                                    <div className="form-control md:col-span-2 mt-1">
+                                        <label className="label cursor-pointer justify-start gap-3">
+                                            <input
+                                                type="checkbox"
+                                                className="checkbox"
+                                                checked={item.draft.fridgeProduct}
+                                                disabled={isLoading}
+                                                onChange={(event) =>
+                                                    onFridgeProductChange(
+                                                        event.target.checked,
+                                                    )
+                                                }
+                                            />
+                                            <span className="label-text">
+                                                Produit a conserver au frigo ?
+                                            </span>
+                                        </label>
                                     </div>
                                 </div>
                             )}

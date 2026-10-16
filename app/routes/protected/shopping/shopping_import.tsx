@@ -10,6 +10,7 @@ type ProductLite = {
     default_price?: number | null;
     comment?: string | null;
     category?: string | null;
+    fridge_product?: boolean;
 };
 
 type CategoryLite = {
@@ -32,6 +33,7 @@ type ImportedItem = {
         categoryName: string;
         defaultPrice: string;
         comment: string;
+        fridgeProduct: boolean;
         quantity: number;
         articleComment: string;
         inPromotion: boolean;
@@ -435,6 +437,7 @@ export default function ShoppingImport() {
             name,
             category_id: categoryPayload,
             comment: safeTrim(item.draft.comment),
+            fridge_product: !!item.draft.fridgeProduct,
         };
 
         const parsedDefaultPrice = Number(item.draft.defaultPrice);
@@ -467,6 +470,7 @@ export default function ShoppingImport() {
                                     ? parsedDefaultPrice
                                     : null,
                             comment: safeTrim(item.draft.comment) || null,
+                            fridge_product: !!item.draft.fridgeProduct,
                         },
                         matchOrigin: "catalog",
                         suggestedProduct: null,
@@ -539,6 +543,7 @@ export default function ShoppingImport() {
             : {
                   name,
                   category_id: categoryPayload,
+                  fridge_product: !!item.draft.fridgeProduct,
                   default_price:
                       Number.isFinite(parsedDefaultPrice) && parsedDefaultPrice >= 0
                           ? parsedDefaultPrice
@@ -624,6 +629,7 @@ export default function ShoppingImport() {
                     categoryName: "",
                     defaultPrice: "",
                     comment: "",
+                    fridgeProduct: false,
                     quantity: 1,
                     articleComment: entry.inferredArticleComment,
                     inPromotion: entry.inferredInPromotion,
@@ -756,6 +762,9 @@ export default function ShoppingImport() {
                                     }
                                     onCommentChange={(value) =>
                                         updateDraft(item.id, "comment", value)
+                                    }
+                                    onFridgeProductChange={(checked) =>
+                                        updateDraft(item.id, "fridgeProduct", checked)
                                     }
                                     onQuantityChange={(value) =>
                                         updateDraft(item.id, "quantity", value)

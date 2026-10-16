@@ -14,6 +14,7 @@ type FormValues = {
     categoryName: string;
     defaultPrice?: number;
     comment: string;
+    fridgeProduct: boolean;
 };
 
 const normalize = (s: string) =>
@@ -43,6 +44,7 @@ export default function FormAjoutProduit({
         categoryName: "",
         defaultPrice: undefined,
         comment: "",
+        fridgeProduct: false,
     };
 
     const {
@@ -109,6 +111,7 @@ export default function FormAjoutProduit({
             name,
             category_id: categoryPayload,
             comment: safeTrim(values.comment),
+            fridge_product: !!values.fridgeProduct,
         };
         if (
             typeof values.defaultPrice === "number" &&
@@ -257,6 +260,19 @@ export default function FormAjoutProduit({
                                 placeholder="Optionnel"
                                 {...register("comment")}
                             />
+                        </div>
+
+                        <div className="form-control md:col-span-2 mt-1">
+                            <label className="label cursor-pointer justify-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    {...register("fridgeProduct")}
+                                />
+                                <span className="label-text">
+                                    Produit à conserver au frigo ?
+                                </span>
+                            </label>
                         </div>
                     </div>
                 </section>

@@ -14,6 +14,7 @@ export type ProductBase = {
     name: string;
     comment?: string;
     category?: string;
+    fridge_product?: boolean;
 };
 
 export type ShoppingListItemDetailed = {
